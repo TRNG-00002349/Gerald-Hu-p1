@@ -1,4 +1,4 @@
-package test.java.com.revature;
+package com.revature;
 
 public @interface MainTest {
 }
