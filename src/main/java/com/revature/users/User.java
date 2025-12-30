@@ -3,8 +3,10 @@ package com.revature.users;
 public class User {
 		private Integer id;
 		private String username;
+		private String password; // tbd whether hashed or not
+		// Note: Could use private UserAuthDTO instead, using composition.
+		// For simplicity when writing javalin/JDBC, we're doing it this way instead.
 		private String email;
-		private String password; // tbd
 		private String firstName;
 		private String lastName;
 
