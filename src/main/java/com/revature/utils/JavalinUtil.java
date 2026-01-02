@@ -1,6 +1,9 @@
 package com.revature.utils;
 
+import com.revature.health.HealthController;
 import com.revature.users.UserController;
+import com.revature.users.UserDao;
+import com.revature.users.UserService;
 import io.javalin.Javalin;
 
 /**
@@ -10,15 +13,26 @@ public class JavalinUtil {
 		private static Javalin server;
 
 		public static Javalin startServer() {
-				server = Javalin.create(); // Javalin docs frequently calls this "app"
-				// server.addEndpoint() if needed
+				try {
+						server = Javalin.create();
 
-				server.get("/ping", (ctx) -> {
-						// UserController.ping(ctx);
+						// User and other backbone controllers.
+						HealthController healthController = new HealthController();
+						UserController userController = new UserController(
+								new UserService(
+										new UserDao()
+								)
+						);
 
-						ctx.result("pong!");
-				});
+						// Content controllers with DAOs.
 
-				return server.start(10001);
+						server.get("/ping", healthController::ping);
+
+						return server.start(10001);
+				} catch (Exception e) {
+						e.printStackTrace();
+				}
+
+				return null;
 		}
 }
