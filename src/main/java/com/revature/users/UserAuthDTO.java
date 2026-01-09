@@ -1,7 +1,8 @@
 package com.revature.users;
 
 /**
- * Used to perform logins.
+ * (Theoretically) used to perform logins. Not actually used at the moment,
+ * but can be implemented in future upgrades.
  */
 public class UserAuthDTO {
 		private String username;

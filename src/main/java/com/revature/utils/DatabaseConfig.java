@@ -6,7 +6,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
- * TBD: connection pool based on Aliaksandr's code, using Hikari
+ * Instead of making a single connection, Alex made a connection pool via Hikari.
+ * I'm not using Alex's code at the moment, but it can be implemented in future upgrades.
  */
 public class DatabaseConfig {
 		private static final HikariDataSource dataSource;
