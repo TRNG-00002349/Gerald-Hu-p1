@@ -1,81 +1,53 @@
 package com.revature.users;
 
 public class User {
-		private Integer id;
-		private String username;
-		private String password; // tbd whether hashed or not
-		// Note: Could use private UserAuthDTO instead, using composition.
-		// For simplicity when writing javalin/JDBC, we're doing it this way instead.
-		private String email;
-		private String firstName;
-		private String lastName;
+	private Integer id;
+	private String username;
+	private String hashedPassword; // tbd whether hashed or not
+	// Note: Could use private UserAuthDTO instead, using composition.
+	// For simplicity when writing javalin/JDBC, we're doing it this way for now.
+	private String email;
 
-		public User() {
+	public User() {
 
-		}
+	}
 
-		public User(String username, String email, String password, String firstName, String lastName) {
-				this.username = username;
-				this.email = email;
-				this.password = password;
-				this.firstName = firstName;
-				this.lastName = lastName;
-		}
+	public User(Integer id, String username, String hashedPassword, String email) {
+		this.id = id;
+		this.username = username;
+		this.hashedPassword = hashedPassword;
+		this.email = email;
+	}
 
-		public User(Integer id, String username, String email, String password, String firstName, String lastName) {
-				this.id = id;
-				this.username = username;
-				this.email = email;
-				this.password = password;
-				this.firstName = firstName;
-				this.lastName = lastName;
-		}
+	public Integer getId() {
+		return id;
+	}
 
-		public Integer getId() {
-				return id;
-		}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-		public void setId(Integer id) {
-				this.id = id;
-		}
+	public String getUsername() {
+		return username;
+	}
 
-		public String getUsername() {
-				return username;
-		}
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-		public void setUsername(String username) {
-				this.username = username;
-		}
+	public String getHashedPassword() {
+		return hashedPassword;
+	}
 
-		public String getEmail() {
-				return email;
-		}
+	public void setHashedPassword(String hashedPassword) {
+		this.hashedPassword = hashedPassword;
+	}
 
-		public void setEmail(String email) {
-				this.email = email;
-		}
+	public String getEmail() {
+		return email;
+	}
 
-		public String getPassword() {
-				return password;
-		}
-
-		public void setPassword(String password) {
-				this.password = password;
-		}
-
-		public String getFirstName() {
-				return firstName;
-		}
-
-		public void setFirstName(String firstName) {
-				this.firstName = firstName;
-		}
-
-		public String getLastName() {
-				return lastName;
-		}
-
-		public void setLastName(String lastName) {
-				this.lastName = lastName;
-		}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

@@ -13,28 +13,28 @@ import java.util.stream.Collectors;
 
 public class DatabaseUtil {
 
-		/**
-		 * Seeds the database from a prewritten SQL script.
-		 * @throws SQLException
-		 * @throws Exception
-		 */
-		public static void initializeData() throws SQLException, Exception {
-			BufferedReader scriptReader = new BufferedReader(
-					new InputStreamReader(
-							DatabaseUtil.class.getClassLoader().getResourceAsStream("script.sql")));
+	/**
+	 * Seeds the database from a prewritten SQL script.
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public static void initializeData() throws SQLException, Exception {
+		BufferedReader scriptReader = new BufferedReader(
+				new InputStreamReader(
+						DatabaseUtil.class.getClassLoader().getResourceAsStream("script.sql")));
 
-			String script = scriptReader.lines().collect(Collectors.joining("\n"));
-			String[] statements = script.split(";");
+		String script = scriptReader.lines().collect(Collectors.joining("\n"));
+		String[] statements = script.split(";");
 
-			for(String sqlString : statements) {
-				sqlString = sqlString.trim();
-				try (
-						Statement stmt = DataSource.getConnection().createStatement();
-				) {
-					stmt.execute(sqlString);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		for(String sqlString : statements) {
+			sqlString = sqlString.trim();
+			try (
+					Statement stmt = DataSource.getConnection().createStatement();
+			) {
+				stmt.execute(sqlString);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
+	}
 }
