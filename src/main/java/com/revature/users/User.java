@@ -1,12 +1,15 @@
 package com.revature.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class User {
 	private Integer id;
 	private String username;
-	private String hashedPassword; // tbd whether hashed or not
-	// Note: Could use private UserAuthDTO instead, using composition.
-	// For simplicity when writing javalin/JDBC, we're doing it this way for now.
+	@JsonIgnore
+	private String hashedPassword;
+	@JsonIgnore
 	private String email;
+	// Note: Could use private UserAuthDTO instead, using composition.
 
 	public User() {
 
