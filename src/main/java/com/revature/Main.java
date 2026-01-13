@@ -7,17 +7,17 @@ import java.util.Objects;
 import java.util.Properties;
 
 public class Main {
-		public static void main(String[] args) {
-				System.out.println("Hello world!");
+	public static void main(String[] args) {
+		System.out.println("Hello world!");
 
-				try {
-					DatabaseUtil.initializeData();
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.exit(-1);
-				}
-
-
-				JavalinUtil.startServer();
+		try {
+			DatabaseUtil.initializeData();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
 		}
+
+
+		JavalinUtil.startServer();
+	}
 }

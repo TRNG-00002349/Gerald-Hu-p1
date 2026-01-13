@@ -29,7 +29,7 @@ public class DatabaseUtil {
 			for(String sqlString : statements) {
 				sqlString = sqlString.trim();
 				try (
-					Statement stmt = DataSource.getConnection().createStatement();
+						Statement stmt = DataSource.getConnection().createStatement();
 				) {
 					stmt.execute(sqlString);
 				} catch (Exception e) {
