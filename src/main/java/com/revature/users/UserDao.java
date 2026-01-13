@@ -11,10 +11,6 @@ import java.util.List;
  */
 public class UserDao {
 
-	private static final String READ_ONE_USER_SQL = """
-			SELECT * FROM users WHERE id = ?
-			""";
-
 	public User createUser(User user) throws SQLException {
 		String CREATE_USER_SQL = """
 			INSERT INTO users (username, email, password_hash)
@@ -59,5 +55,30 @@ public class UserDao {
 			}
 			return userList;
 		}
+	}
+
+	public User readUser(String id) throws SQLException {
+		String READ_ONE_USER_SQL = """
+			SELECT * FROM users WHERE id = ?
+			""";
+		try(
+				var conn = DataSource.getConnection();
+				var pstmt = conn.prepareStatement(READ_ONE_USER_SQL);
+		)	{
+			pstmt.setInt(1, Integer.parseInt(id));
+			pstmt.executeQuery();
+			ResultSet rs = pstmt.getResultSet();
+			if (!rs.isBeforeFirst()) {
+				throw new UserNotFoundException(id);
+			}
+			rs.first();
+			User u = new User();
+			u.setId(rs.getInt("id"));
+			u.setUsername((rs.getString("username")));
+			return u;
+		} catch (NumberFormatException e) {
+			throw new UserNotFoundException(id);
+		}
+		// TODO: We also want to get a list of posts belonging to this user. (Either the entire post or just the ID... probably entire post.)
 	}
 }

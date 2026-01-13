@@ -1,11 +1,9 @@
 package com.revature.utils;
 
 import com.revature.health.HealthController;
-import com.revature.users.UserController;
-import com.revature.users.UserDao;
-import com.revature.users.UserService;
-import com.revature.users.UsernameValidationException;
+import com.revature.users.*;
 import io.javalin.Javalin;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 import java.sql.SQLException;
 
@@ -20,10 +18,11 @@ public class JavalinUtil {
 		try {
 			server = Javalin.create();
 
-			// Health
+			// Health and boilerplate
 			HealthController healthController = new HealthController();
 			server.get("/ping", healthController::ping);
 			server.get("/header-test", healthController::headerTest);
+			server.exception(SQLException.class, ControllerUtil::handleDBException);
 
 			// User
 			UserController userController = new UserController(
@@ -33,9 +32,10 @@ public class JavalinUtil {
 			);
 
 			server.get("/users", userController::showAllUsers);
+			server.get("/users/{user-id}", userController::showOneUser);
 			server.post("/users", userController::registerUser);
-			server.exception(UsernameValidationException.class, userController::handleException);
-			server.exception(SQLException.class, ControllerUtil::handleDBException);
+			server.exception(UsernameValidationException.class, userController::handleUsernameException);
+			server.exception(UserNotFoundException.class, userController::handleUserNotFoundException);
 
 			// Additional controllers ...
 

@@ -14,15 +14,7 @@ public class UserController {
 	private final UserService userService;
 
 	public UserController(UserService userService) {
-		// An example of constructor DI
 		this.userService = userService;
-	}
-
-	public void showAllUsers(Context ctx) throws SQLException {
-		List<User> users =  userService.getAllUsers();
-
-		ctx.status(HttpStatus.OK);
-		ctx.json(users);
 	}
 
 	public void registerUser(Context ctx) throws UsernameValidationException, SQLException {
@@ -37,7 +29,26 @@ public class UserController {
 		ctx.json(persistedUser);
 	}
 
-	public void handleException(Exception e, Context ctx) {
+	public void showAllUsers(Context ctx) throws SQLException {
+		List<User> users =  userService.getAllUsers();
+
+		ctx.status(HttpStatus.OK);
+		ctx.json(users);
+	}
+
+	public void showOneUser(Context ctx) throws SQLException {
+		User user = userService.getUser(ctx.pathParam("user-id"));
+		ctx.status(HttpStatus.OK);
+		ctx.json(user);
+	}
+
+
+	public void handleUsernameException(Exception e, Context ctx) {
 		ctx.status(HttpStatus.BAD_REQUEST).result("username error");
 	}
+
+	public void handleUserNotFoundException(Exception e, Context ctx) {
+		ctx.status(HttpStatus.BAD_REQUEST).result(String.format("User not found: %s", e.getMessage()));
+	}
+
 }

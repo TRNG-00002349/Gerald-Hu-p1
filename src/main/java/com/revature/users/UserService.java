@@ -14,15 +14,19 @@ public class UserService {
 		this.userDao = userDao;
 	}
 
-	public List<User> getAllUsers() throws SQLException {
-		return userDao.readAllUsers();
-	}
-
 	public User saveUser(User user) throws UsernameValidationException, SQLException {
 		// example validation
 		if (user.getUsername().length() <= 3) {
 			throw new UsernameValidationException("username must be longer than 3 characters");
 		}
 		return userDao.createUser(user);
+	}
+
+	public List<User> getAllUsers() throws SQLException {
+		return userDao.readAllUsers();
+	}
+
+	public User getUser(String id) throws SQLException {
+		return userDao.readUser(id);
 	}
 }
