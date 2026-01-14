@@ -23,6 +23,7 @@ public class Main {
 			props.load(DatabaseUtil.class.getClassLoader().getResourceAsStream("application.properties"));
 			if (props.getProperty("mode").equals("create")) {
 				DatabaseUtil.initializeData();
+				System.out.println("Database initialized");
 			}
 
 			HealthController healthController = new HealthController();
@@ -41,6 +42,7 @@ public class Main {
 					.port(10001)
 					.addController(healthController)
 					.addController(userController)
+					.addController(postController)
 					.build();
 			server.start();
 		} catch (IOException e) {

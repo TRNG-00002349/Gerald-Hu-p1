@@ -1,5 +1,7 @@
 package com.revature.posts;
 
+import java.sql.SQLException;
+
 public class PostService {
 
 	private final PostDao postDao;
@@ -8,19 +10,28 @@ public class PostService {
 		this.postDao = postDao;
 	}
 
-	public Post saveNewPost(Post post) {
+
+	private void validatePost(Post post) throws PostValidationException {
+		if (post.getContent().isEmpty()) {
+			throw new PostValidationException("Your post can't be empty!");
+		}
+	}
+
+	public Post saveNewPost(Post post) throws PostValidationException, SQLException {
+		validatePost(post);
+
 		return postDao.createPost(post);
 	}
 
-	public Post readPost(Integer postId) {
+	public Post readPost(String postId) throws SQLException, PostNotFoundException {
 		return postDao.readPost(postId);
 	}
 
-	public Post updatePost(Integer postId, Post post) {
+	public Post updatePost(String postId, Post post) {
 		return postDao.updatePost(postId, post);
 	}
 
-	public void deletePost(Integer postId) {
+	public void deletePost(String postId) {
 		postDao.deletePost(postId);
 	}
 }

@@ -1,11 +1,16 @@
 package com.revature.posts;
 
+import java.time.LocalDateTime;
+
 public class Post {
 	private Integer id;
 	private String content;
 	private Integer authorId;
 
-	public Post () {
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+
+	public Post() {
 
 	}
 
@@ -38,4 +43,21 @@ public class Post {
 	public void setAuthorId(Integer authorId) {
 		this.authorId = authorId;
 	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
 }
