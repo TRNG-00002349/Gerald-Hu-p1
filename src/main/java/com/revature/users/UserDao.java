@@ -112,7 +112,6 @@ public class UserDao {
 		} catch (NumberFormatException e) {
 			throw new UserNotFoundException(id);
 		}
-		// TODO: Users should be able to update passwords.
 	}
 
 	public void deleteUser(String id) throws SQLException {
