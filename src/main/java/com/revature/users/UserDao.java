@@ -13,8 +13,8 @@ public class UserDao {
 
 	public User createUser(User user) throws SQLException {
 		String CREATE_USER_SQL = """
-			INSERT INTO users (username, email, password_hash)
-			VALUES (?, ?, ?)
+			INSERT INTO users (username, email, hashed_password, salt)
+			VALUES (?, ?, ?, ?)
 			""";
 		try (
 				var conn = DataSource.getConnection();
@@ -23,6 +23,7 @@ public class UserDao {
 			pstmt.setString(1, user.getUsername());
 			pstmt.setString(2, user.getEmail());
 			pstmt.setString(3, user.getHashedPassword());
+			pstmt.setString(4, user.getSalt());
 			pstmt.executeUpdate();
 
 			ResultSet rs = pstmt.getGeneratedKeys();
@@ -33,11 +34,11 @@ public class UserDao {
 		}
 	}
 
-	public List<User> readAllUsers() throws SQLException {
+	public List<UserInfoDTO> readAllUsers() throws SQLException {
 		String READ_USERS_SQL = """
 			SELECT * FROM users
 			""";
-		ArrayList<User> userList = new ArrayList<>();
+		ArrayList<UserInfoDTO> userList = new ArrayList<>();
 		try (
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(READ_USERS_SQL);
@@ -48,9 +49,7 @@ public class UserDao {
 				return userList;
 			}
 			while (rs.next()) {
-				User u = new User();
-				u.setId(rs.getInt("id"));
-				u.setUsername((rs.getString("username")));
+				UserInfoDTO u = new UserInfoDTO(rs.getString("username"), rs.getInt("id"));
 				userList.add(u);
 			}
 			return userList;
@@ -71,7 +70,7 @@ public class UserDao {
 			if (!rs.isBeforeFirst()) {
 				throw new UserNotFoundException(id);
 			}
-			rs.first();
+			rs.next();
 			User u = new User();
 			u.setId(rs.getInt("id"));
 			u.setUsername((rs.getString("username")));

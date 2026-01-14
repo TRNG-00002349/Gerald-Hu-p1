@@ -3,7 +3,6 @@ package com.revature.utils;
 import com.revature.health.HealthController;
 import com.revature.users.*;
 import io.javalin.Javalin;
-import static io.javalin.apibuilder.ApiBuilder.*;
 
 import java.sql.SQLException;
 
@@ -31,10 +30,10 @@ public class JavalinUtil {
 					)
 			);
 
+			server.post("/users", userController::registerUser);
 			server.get("/users", userController::showAllUsers);
 			server.get("/users/{user-id}", userController::showOneUser);
-			server.post("/users", userController::registerUser);
-			server.exception(UsernameValidationException.class, userController::handleUsernameException);
+			server.exception(UserBadRequestException.class, userController::handleUserBadRequestException);
 			server.exception(UserNotFoundException.class, userController::handleUserNotFoundException);
 
 			// Additional controllers ...
