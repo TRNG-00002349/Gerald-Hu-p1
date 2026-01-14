@@ -1,6 +1,5 @@
 package com.revature.users;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 
@@ -19,7 +18,6 @@ public class UserController {
 	}
 
 	public void registerUser(Context ctx) throws SQLException, UserBadRequestException {
-		// TODO: test for empty body, body of {}, malformed body, proper body
 		UserAuthDTO user;
 		try {
 			user = ctx.bodyAsClass(UserAuthDTO.class);
@@ -33,6 +31,7 @@ public class UserController {
 		// Prep the response
 		ctx.status(HttpStatus.CREATED);
 		ctx.json(persistedUser);
+		// TODO: write tests for empty body, body of {}, malformed body, proper body
 	}
 
 	public void showAllUsers(Context ctx) throws SQLException {
@@ -54,10 +53,6 @@ public class UserController {
 
 	public void handleUserBadRequestException(Exception e, Context ctx) {
 		ctx.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to /users/: %s", e.getMessage()));
-	}
-
-	public void handleUsernameException(Exception e, Context ctx) {
-		ctx.status(HttpStatus.BAD_REQUEST).result(String.format("Username error: %s", e.getMessage()));
 	}
 
 	public void handleUserNotFoundException(Exception e, Context ctx) {

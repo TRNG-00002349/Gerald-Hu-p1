@@ -52,7 +52,7 @@ public class UserService {
 		if (!EmailValidator.getInstance().isValid(user.getEmail())) {
 			throw new UserBadRequestException(String.format("Invalid email: %s", user.getEmail()));
 		}
-		// TODO: additional validations (no underscores, no spaces, force lowercasing)
+		// TODO: additional validations (username has no underscores, no spaces, force lowercasing)
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 
 		User u = new User();
