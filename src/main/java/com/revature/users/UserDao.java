@@ -83,11 +83,11 @@ public class UserDao {
 
 	public User updateUser(String id, User user) throws SQLException {
 		String UPDATE_USER_SQL = """
-				UPDATE USERS
-				SET username = ?,
-				email = ?
-				WHERE id = ?
-				""";
+			UPDATE USERS
+			SET username = ?,
+			email = ?
+			WHERE id = ?
+			""";
 		try(
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(UPDATE_USER_SQL);
@@ -102,6 +102,6 @@ public class UserDao {
 			user.setId(Integer.parseInt(id));
 			return user;
 		}
-
+		// TODO: Users should be able to update passwords.
 	}
 }
