@@ -71,4 +71,8 @@ public class UserService {
 	public User getUser(String id) throws SQLException {
 		return userDao.readUser(id);
 	}
+
+	public User updateUser(String id, User user) throws SQLException {
+		return userDao.updateUser(id, user);
+	}
 }

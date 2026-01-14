@@ -2,6 +2,7 @@ package com.revature.users;
 
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,46 +18,57 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	public void registerUser(Context ctx) throws SQLException, UserBadRequestException {
+	public void registerUser(Context context) throws SQLException, UserBadRequestException {
 		UserAuthDTO user;
 		try {
-			user = ctx.bodyAsClass(UserAuthDTO.class);
+			user = context.bodyAsClass(UserAuthDTO.class);
 		} catch (Exception e) {
-			throw new UserBadRequestException(String.format("Could not parse %s", ctx.body()));
+			throw new UserBadRequestException(String.format("Couldn't parse %s", context.body()));
 		}
 
 		// Send user to service layer (and then to DAO layer); get result back
 		User persistedUser = userService.saveUser(user);
 
 		// Prep the response
-		ctx.status(HttpStatus.CREATED);
-		ctx.json(persistedUser);
+		context.status(HttpStatus.CREATED);
+		context.json(persistedUser);
 		// TODO: write tests for empty body, body of {}, malformed body, proper body
 	}
 
-	public void showAllUsers(Context ctx) throws SQLException {
+	public void showAllUsers(Context context) throws SQLException {
 		List<UserInfoDTO> users =  userService.getAllUsers();
-		ctx.status(HttpStatus.OK);
-		ctx.json(users);
+		context.status(HttpStatus.OK);
+		context.json(users);
 	}
 
-	public void showOneUser(Context ctx) throws SQLException {
-		User user = userService.getUser(ctx.pathParam("user-id"));
-		ctx.status(HttpStatus.OK);
-		ctx.json(user);
+	public void showOneUser(Context context) throws SQLException {
+		User user = userService.getUser(context.pathParam("user-id"));
+		context.status(HttpStatus.OK);
+		context.json(user);
 		// TODO: Write tests for: valid user id, stringy user ID, invalid user ID
 	}
 
 	// TODO: get user by username
 
 	// We allow changing username, password, email; these implicitly change updated_at
+	public void updateUser(Context context) throws SQLException, UserBadRequestException {
+		User user;
+		try {
+			user = context.bodyAsClass(User.class);
+		} catch (Exception e) {
+			throw new UserBadRequestException(String.format("Couldn't parse %s", context.body()));
+		}
 
-	public void handleUserBadRequestException(Exception e, Context ctx) {
-		ctx.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to /users/: %s", e.getMessage()));
+		User persistedUser = userService.updateUser(context.pathParam("user-id"), user);
+		context.status(HttpStatus.OK);
+		context.json(persistedUser);
 	}
 
-	public void handleUserNotFoundException(Exception e, Context ctx) {
-		ctx.status(HttpStatus.BAD_REQUEST).result(String.format("User not found: %s", e.getMessage()));
+	public void handleUserBadRequestException(Exception e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to /users/: %s", e.getMessage()));
 	}
 
+	public void handleUserNotFoundException(Exception e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("User not found: %s", e.getMessage()));
+	}
 }

@@ -80,4 +80,28 @@ public class UserDao {
 		}
 		// TODO: We also want to get a list of posts belonging to this user. (Either the entire post or just the ID... probably entire post.)
 	}
+
+	public User updateUser(String id, User user) throws SQLException {
+		String UPDATE_USER_SQL = """
+				UPDATE USERS
+				SET username = ?,
+				email = ?
+				WHERE id = ?
+				""";
+		try(
+				var conn = DataSource.getConnection();
+				var pstmt = conn.prepareStatement(UPDATE_USER_SQL);
+		) {
+			pstmt.setString(1, user.getUsername());
+			pstmt.setString(2, user.getEmail());
+			pstmt.setInt(3, Integer.parseInt(id));
+			Integer updated = pstmt.executeUpdate();
+			if (updated.equals(0)) {
+				throw new UserNotFoundException(id);
+			}
+			user.setId(Integer.parseInt(id));
+			return user;
+		}
+
+	}
 }
