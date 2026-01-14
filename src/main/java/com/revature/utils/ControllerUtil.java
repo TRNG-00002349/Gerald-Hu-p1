@@ -7,6 +7,9 @@ public class ControllerUtil {
 	public static void handleDBException(Exception e, Context ctx) {
 		// TODO: if-clause for "duplicate username"; we want that msg to be user-friendly
 		ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(String.format("A database error occurred: %s", e.getMessage()));
-		e.printStackTrace();
+	}
+
+	public static void handleBadRequestException(Exception e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to %s: %s", context.path(), e.getMessage()));
 	}
 }

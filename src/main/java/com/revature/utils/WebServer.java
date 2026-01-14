@@ -24,6 +24,7 @@ public class WebServer {
 		}
 
 		server.exception(SQLException.class, ControllerUtil::handleDBException);
+		server.exception(BadRequestException.class, ControllerUtil::handleBadRequestException);
 	}
 
 	public void start() {
