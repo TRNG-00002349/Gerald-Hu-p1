@@ -2,6 +2,9 @@ package com.revature.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 public class User {
 	private Integer id;
 	private String username;
@@ -11,6 +14,10 @@ public class User {
 	@JsonIgnore
 	private String salt;
 	// Note: Could use private UserAuthDTO instead, using composition.
+	@JsonIgnore
+	private LocalDateTime createdAt;
+	@JsonIgnore
+	private LocalDateTime updatedAt;
 
 	public User() {
 
@@ -64,4 +71,15 @@ public class User {
 		this.salt = salt;
 	}
 
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
 }

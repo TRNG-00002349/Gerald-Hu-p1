@@ -64,6 +64,11 @@ public class UserController {
 		context.json(persistedUser);
 	}
 
+	public void deleteUser(Context context) throws SQLException {
+		userService.deleteUser(context.pathParam("user-id"));
+		context.status(HttpStatus.NO_CONTENT);
+	}
+
 	public void handleUserBadRequestException(Exception e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to /users/: %s", e.getMessage()));
 	}
@@ -71,4 +76,5 @@ public class UserController {
 	public void handleUserNotFoundException(Exception e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("User not found: %s", e.getMessage()));
 	}
+
 }

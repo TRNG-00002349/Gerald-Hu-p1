@@ -34,6 +34,7 @@ public class JavalinUtil {
 			server.get("/users", userController::showAllUsers);
 			server.get("/users/{user-id}", userController::showOneUser);
 			server.put("/users/{user-id}", userController::updateUser);
+			server.delete("/users/{user-id}", userController::deleteUser);
 			server.exception(UserBadRequestException.class, userController::handleUserBadRequestException);
 			server.exception(UserNotFoundException.class, userController::handleUserNotFoundException);
 

@@ -75,4 +75,8 @@ public class UserService {
 	public User updateUser(String id, User user) throws SQLException {
 		return userDao.updateUser(id, user);
 	}
+
+	public void deleteUser(String id) throws SQLException {
+		userDao.deleteUser(id);
+	}
 }
