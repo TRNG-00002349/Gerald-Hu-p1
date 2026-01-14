@@ -68,9 +68,9 @@ public class UserController implements Controller {
 
 	// We allow changing username, password, email; these implicitly change updated_at
 	public void updateUser(Context context) throws SQLException, UserBadRequestException {
-		User user;
+		UserAuthDTO user;
 		try {
-			user = context.bodyAsClass(User.class);
+			user = context.bodyAsClass(UserAuthDTO.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new UserBadRequestException(String.format("Couldn't parse %s", context.body()));

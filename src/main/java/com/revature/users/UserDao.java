@@ -88,7 +88,9 @@ public class UserDao {
 		String UPDATE_USER_SQL = """
 				UPDATE USERS
 				SET username = ?,
-				email = ?
+				email = ?,
+				hashed_password = ?,
+				salt = ?
 				WHERE id = ?
 				""";
 		try(
@@ -97,7 +99,9 @@ public class UserDao {
 		) {
 			pstmt.setString(1, user.getUsername());
 			pstmt.setString(2, user.getEmail());
-			pstmt.setInt(3, Integer.parseInt(id));
+			pstmt.setString(3, user.getHashedPassword());
+			pstmt.setString(4, user.getSalt());
+			pstmt.setInt(5, Integer.parseInt(id));
 			Integer updated = pstmt.executeUpdate();
 			if (updated.equals(0)) {
 				throw new UserNotFoundException(id);

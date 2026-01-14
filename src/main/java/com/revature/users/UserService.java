@@ -75,14 +75,17 @@ public class UserService {
 		return userDao.readUser(id);
 	}
 
-	public User updateUser(String id, User user) throws SQLException, UserBadRequestException {
-		UserAuthDTO u = new UserAuthDTO(
-				user.getUsername(),
-				user.getHashedPassword(),
-				user.getEmail()
-		);
-		validateUser(u);
-		return userDao.updateUser(id, user);
+	public User updateUser(String id, UserAuthDTO user) throws SQLException, UserBadRequestException {
+		byte[] salt = salt();
+		String hashedPassword = hashPassword(user.getPassword(), salt);
+		validateUser(user);
+
+		User u = new User();
+		u.setUsername(user.getUsername());
+		u.setEmail(user.getEmail());
+		u.setHashedPassword(hashedPassword);
+		u.setSalt(new String(salt));
+		return userDao.updateUser(id, u);
 	}
 
 	public void deleteUser(String id) throws SQLException {
