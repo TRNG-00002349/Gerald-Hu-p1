@@ -30,11 +30,11 @@ public class UserService {
 	}
 
 	private static String hashPassword(String password, byte[] salt) throws UserBadRequestException {
-		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
 		try {
+			KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 			return new String(factory.generateSecret(spec).getEncoded());
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NullPointerException e) {
 			e.printStackTrace();
 			throw new UserBadRequestException("Couldn't accept password");
 		}

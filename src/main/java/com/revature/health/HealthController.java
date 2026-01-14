@@ -1,9 +1,21 @@
 package com.revature.health;
 
+import com.revature.utils.Controller;
+import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 
-public class HealthController {
+public class HealthController implements Controller {
+
+	@Override
+	public void registerRoutes(Javalin server) {
+		server.get("/ping", this::ping);
+		server.get("/header-test", this::headerTest);
+	}
+
+	public void registerExceptions(Javalin server) {
+
+	}
 
 	public void ping(Context ctx) {
 		String reply = "pong!";

@@ -1,7 +1,11 @@
 package com.revature;
 
+import com.revature.health.HealthController;
+import com.revature.users.UserController;
+import com.revature.users.UserDao;
+import com.revature.users.UserService;
 import com.revature.utils.DatabaseUtil;
-import com.revature.utils.JavalinUtil;
+import com.revature.utils.WebServer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,12 +21,22 @@ public class Main {
 			if (props.getProperty("mode").equals("create")) {
 				DatabaseUtil.initializeData();
 			}
+
+			HealthController healthController = new HealthController();
+			UserController userController = new UserController(
+					new UserService(
+							new UserDao()));
+
+			WebServer server = WebServer.builder()
+					.port(10001)
+					.addController(healthController)
+					.addController(userController)
+					.build();
+			server.start();
 		} catch (IOException e) {
 			System.out.println("Couldn't find application.properties");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		JavalinUtil.startServer();
 	}
 }

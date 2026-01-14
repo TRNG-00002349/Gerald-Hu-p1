@@ -1,8 +1,9 @@
 package com.revature.users;
 
+import com.revature.utils.Controller;
+import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -10,12 +11,27 @@ import java.util.List;
 /**
  * Handles HTTP request/response logic. Maybe exception handling.
  */
-public class UserController {
+public class UserController implements Controller {
 
 	private final UserService userService;
 
 	public UserController(UserService userService) {
 		this.userService = userService;
+	}
+
+	@Override
+	public void registerRoutes(Javalin server) {
+		server.post("/users", this::registerUser);
+		server.get("/users", this::showAllUsers);
+		server.get("/users/{user-id}", this::showOneUser);
+		server.put("/users/{user-id}", this::updateUser);
+		server.delete("/users/{user-id}", this::deleteUser);
+	}
+
+	@Override
+	public void registerExceptions(Javalin server) {
+		server.exception(UserBadRequestException.class, this::handleUserBadRequestException);
+		server.exception(UserNotFoundException.class, this::handleUserNotFoundException);
 	}
 
 	public void registerUser(Context context) throws SQLException, UserBadRequestException {
@@ -56,6 +72,7 @@ public class UserController {
 		try {
 			user = context.bodyAsClass(User.class);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new UserBadRequestException(String.format("Couldn't parse %s", context.body()));
 		}
 

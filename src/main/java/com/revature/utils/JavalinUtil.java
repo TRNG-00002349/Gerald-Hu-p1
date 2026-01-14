@@ -17,11 +17,6 @@ public class JavalinUtil {
 		try {
 			server = Javalin.create();
 
-			// Health and boilerplate
-			HealthController healthController = new HealthController();
-			server.get("/ping", healthController::ping);
-			server.get("/header-test", healthController::headerTest);
-			server.exception(SQLException.class, ControllerUtil::handleDBException);
 
 			// User
 			UserController userController = new UserController(
@@ -30,13 +25,8 @@ public class JavalinUtil {
 					)
 			);
 
-			server.post("/users", userController::registerUser);
-			server.get("/users", userController::showAllUsers);
-			server.get("/users/{user-id}", userController::showOneUser);
-			server.put("/users/{user-id}", userController::updateUser);
-			server.delete("/users/{user-id}", userController::deleteUser);
-			server.exception(UserBadRequestException.class, userController::handleUserBadRequestException);
-			server.exception(UserNotFoundException.class, userController::handleUserNotFoundException);
+
+
 
 			// Additional controllers ...
 
