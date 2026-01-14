@@ -13,6 +13,12 @@ public class UserAuthDTO {
 
 	}
 
+	/**
+	 *
+	 * @param username
+	 * @param password
+	 * @param email
+	 */
 	public UserAuthDTO(String username, String password, String email) {
 		this.username = username;
 		this.password = password;

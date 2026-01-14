@@ -112,6 +112,10 @@ public class UserDao {
 	}
 
 	public void deleteUser(String id) throws SQLException {
+		/* TODO: When deleting a post, we should preserve posts made by that user,
+		but wipe the authorId -- as reddit does.
+		Deleting the post itself also cascades to likes, etc. Performance implications.
+		 */
 		String DELETE_ONE_USER_SQL = """
 				DELETE FROM USERS
 				WHERE ID = ?

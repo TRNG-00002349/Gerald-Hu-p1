@@ -40,9 +40,7 @@ public class UserService {
 		}
 	}
 
-	public User saveUser(UserAuthDTO user) throws UserBadRequestException, SQLException {
-		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt
-
+	private void validateUser(UserAuthDTO user) throws UserBadRequestException {
 		if (user.getUsername() == null) {
 			throw new UserBadRequestException("No username provided");
 		}
@@ -53,7 +51,13 @@ public class UserService {
 			throw new UserBadRequestException(String.format("Invalid email: %s", user.getEmail()));
 		}
 		// TODO: additional validations (username has no underscores, no spaces, force lowercasing)
+	}
+
+	public User saveUser(UserAuthDTO user) throws UserBadRequestException, SQLException {
+		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt
 		String hashedPassword = hashPassword(user.getPassword(), salt);
+
+		validateUser(user);
 
 		User u = new User();
 		u.setHashedPassword(hashedPassword);
@@ -61,7 +65,6 @@ public class UserService {
 		u.setEmail(user.getEmail());
 		u.setSalt(new String(salt));
 		return userDao.createUser(u);
-
 	}
 
 	public List<UserInfoDTO> getAllUsers() throws SQLException {
@@ -72,7 +75,13 @@ public class UserService {
 		return userDao.readUser(id);
 	}
 
-	public User updateUser(String id, User user) throws SQLException {
+	public User updateUser(String id, User user) throws SQLException, UserBadRequestException {
+		UserAuthDTO u = new UserAuthDTO(
+				user.getUsername(),
+				user.getHashedPassword(),
+				user.getEmail()
+		);
+		validateUser(u);
 		return userDao.updateUser(id, user);
 	}
 
