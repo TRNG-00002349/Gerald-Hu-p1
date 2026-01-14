@@ -59,7 +59,7 @@ public class UserDao {
 		}
 	}
 
-	public User readUser(String id) throws SQLException {
+	public User readUser(String id) throws SQLException, UserNotFoundException {
 		String READ_ONE_USER_SQL = """
 				SELECT * FROM users WHERE id = ?
 				""";
@@ -76,7 +76,9 @@ public class UserDao {
 			rs.next();
 			User u = new User();
 			u.setId(rs.getInt("id"));
-			u.setUsername((rs.getString("username")));
+			u.setUsername(rs.getString("username"));
+			u.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+			u.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
 			return u;
 		} catch (NumberFormatException e) {
 			throw new UserNotFoundException(id);
@@ -84,7 +86,7 @@ public class UserDao {
 		// TODO: We also want to get a list of posts belonging to this user. (Either the entire post or just the ID... probably entire post.)
 	}
 
-	public User updateUser(String id, User user) throws SQLException {
+	public User updateUser(String id, User user) throws SQLException, UserNotFoundException {
 		String UPDATE_USER_SQL = """
 				UPDATE USERS
 				SET username = ?,
@@ -114,7 +116,7 @@ public class UserDao {
 		}
 	}
 
-	public void deleteUser(String id) throws SQLException {
+	public void deleteUser(String id) throws SQLException, UserNotFoundException {
 		/* TODO: When deleting a post, we should preserve posts made by that user,
 		but wipe the authorId -- as reddit does.
 		Deleting the post itself also cascades to likes, etc. Performance implications.

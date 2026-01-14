@@ -14,9 +14,8 @@ public class User {
 	@JsonIgnore
 	private String salt;
 	// Note: Could use private UserAuthDTO instead, using composition.
-	@JsonIgnore
+
 	private LocalDateTime createdAt;
-	@JsonIgnore
 	private LocalDateTime updatedAt;
 
 	public User() {
@@ -81,5 +80,9 @@ public class User {
 
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 }

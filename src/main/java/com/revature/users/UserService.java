@@ -72,11 +72,11 @@ public class UserService {
 		return userDao.readAllUsers();
 	}
 
-	public User getUser(String id) throws SQLException {
+	public User getUser(String id) throws SQLException, UserNotFoundException {
 		return userDao.readUser(id);
 	}
 
-	public User updateUser(String id, UserAuthDTO user) throws SQLException, BadRequestException {
+	public User updateUser(String id, UserAuthDTO user) throws SQLException, BadRequestException, UserNotFoundException {
 		byte[] salt = salt();
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 		validateUser(user);
@@ -89,7 +89,7 @@ public class UserService {
 		return userDao.updateUser(id, u);
 	}
 
-	public void deleteUser(String id) throws SQLException {
+	public void deleteUser(String id) throws SQLException, UserNotFoundException {
 		userDao.deleteUser(id);
 	}
 }

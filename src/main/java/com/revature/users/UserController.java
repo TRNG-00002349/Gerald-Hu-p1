@@ -59,7 +59,7 @@ public class UserController implements Controller {
 		context.json(users);
 	}
 
-	public void showOneUser(Context context) throws SQLException {
+	public void showOneUser(Context context) throws SQLException, UserNotFoundException {
 		User user = userService.getUser(context.pathParam("user-id"));
 		context.status(HttpStatus.OK);
 		context.json(user);
@@ -69,7 +69,7 @@ public class UserController implements Controller {
 	// TODO: get user by username
 
 	// We allow changing username, password, email; these implicitly change updated_at
-	public void updateUser(Context context) throws SQLException, BadRequestException {
+	public void updateUser(Context context) throws SQLException, BadRequestException, UserNotFoundException {
 		UserAuthDTO user;
 		try {
 			user = context.bodyAsClass(UserAuthDTO.class);
@@ -83,7 +83,7 @@ public class UserController implements Controller {
 		context.json(persistedUser);
 	}
 
-	public void deleteUser(Context context) throws SQLException {
+	public void deleteUser(Context context) throws SQLException, UserNotFoundException {
 		userService.deleteUser(context.pathParam("user-id"));
 		context.status(HttpStatus.NO_CONTENT);
 	}
