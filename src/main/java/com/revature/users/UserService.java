@@ -1,5 +1,6 @@
 package com.revature.users;
 
+import com.revature.utils.BadRequestException;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.crypto.SecretKeyFactory;
@@ -29,31 +30,31 @@ public class UserService {
 		return salt;
 	}
 
-	private static String hashPassword(String password, byte[] salt) throws UserBadRequestException {
+	private static String hashPassword(String password, byte[] salt) throws BadRequestException {
 		try {
 			KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 			return new String(factory.generateSecret(spec).getEncoded());
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NullPointerException e) {
 			e.printStackTrace();
-			throw new UserBadRequestException("Couldn't accept password");
+			throw new BadRequestException("Couldn't accept password");
 		}
 	}
 
-	private void validateUser(UserAuthDTO user) throws UserBadRequestException {
+	private void validateUser(UserAuthDTO user) throws UserValidationException {
 		if (user.getUsername() == null) {
-			throw new UserBadRequestException("No username provided");
+			throw new UserValidationException("No username provided");
 		}
 		if (user.getUsername().length() <= 3) {
-			throw new UserBadRequestException("Username must be longer than 3 characters");
+			throw new UserValidationException("Username must be longer than 3 characters");
 		}
 		if (!EmailValidator.getInstance().isValid(user.getEmail())) {
-			throw new UserBadRequestException(String.format("Invalid email: %s", user.getEmail()));
+			throw new UserValidationException(String.format("Invalid email: %s", user.getEmail()));
 		}
 		// TODO: additional validations (username has no underscores, no spaces, force lowercasing)
 	}
 
-	public User saveUser(UserAuthDTO user) throws UserBadRequestException, SQLException {
+	public User saveUser(UserAuthDTO user) throws BadRequestException, SQLException {
 		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 
@@ -75,7 +76,7 @@ public class UserService {
 		return userDao.readUser(id);
 	}
 
-	public User updateUser(String id, UserAuthDTO user) throws SQLException, UserBadRequestException {
+	public User updateUser(String id, UserAuthDTO user) throws SQLException, BadRequestException {
 		byte[] salt = salt();
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 		validateUser(user);

@@ -1,6 +1,9 @@
 package com.revature;
 
 import com.revature.health.HealthController;
+import com.revature.posts.PostController;
+import com.revature.posts.PostDao;
+import com.revature.posts.PostService;
 import com.revature.users.UserController;
 import com.revature.users.UserDao;
 import com.revature.users.UserService;
@@ -25,7 +28,14 @@ public class Main {
 			HealthController healthController = new HealthController();
 			UserController userController = new UserController(
 					new UserService(
-							new UserDao()));
+							new UserDao()
+					)
+			);
+			PostController postController = new PostController(
+					new PostService(
+							new PostDao()
+					)
+			);
 
 			WebServer server = WebServer.builder()
 					.port(10001)

@@ -1,9 +1,11 @@
 package com.revature.users;
 
+import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -30,16 +32,16 @@ public class UserController implements Controller {
 
 	@Override
 	public void registerExceptions(Javalin server) {
-		server.exception(UserBadRequestException.class, this::handleUserBadRequestException);
 		server.exception(UserNotFoundException.class, this::handleUserNotFoundException);
+		server.exception(UserValidationException.class, this::handleUserValidationException);
 	}
 
-	public void registerUser(Context context) throws SQLException, UserBadRequestException {
+	public void registerUser(Context context) throws SQLException, BadRequestException {
 		UserAuthDTO user;
 		try {
 			user = context.bodyAsClass(UserAuthDTO.class);
 		} catch (Exception e) {
-			throw new UserBadRequestException(String.format("Couldn't parse %s", context.body()));
+			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
 		}
 
 		// Send user to service layer (and then to DAO layer); get result back
@@ -67,13 +69,13 @@ public class UserController implements Controller {
 	// TODO: get user by username
 
 	// We allow changing username, password, email; these implicitly change updated_at
-	public void updateUser(Context context) throws SQLException, UserBadRequestException {
+	public void updateUser(Context context) throws SQLException, BadRequestException {
 		UserAuthDTO user;
 		try {
 			user = context.bodyAsClass(UserAuthDTO.class);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new UserBadRequestException(String.format("Couldn't parse %s", context.body()));
+			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
 		}
 
 		User persistedUser = userService.updateUser(context.pathParam("user-id"), user);
@@ -86,12 +88,12 @@ public class UserController implements Controller {
 		context.status(HttpStatus.NO_CONTENT);
 	}
 
-	public void handleUserBadRequestException(Exception e, Context context) {
-		context.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to /users/: %s", e.getMessage()));
-	}
-
 	public void handleUserNotFoundException(Exception e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("User not found: %s", e.getMessage()));
+	}
+
+	private void handleUserValidationException(UserValidationException e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("User validation error: %s", e.getMessage()));
 	}
 
 }
