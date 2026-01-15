@@ -1,5 +1,7 @@
 package com.revature.posts;
 
+import com.revature.users.UserNotFoundException;
+
 import java.sql.SQLException;
 
 public class PostService {
@@ -17,7 +19,7 @@ public class PostService {
 		}
 	}
 
-	public Post saveNewPost(Post post) throws PostValidationException, SQLException {
+	public Post saveNewPost(Post post) throws PostValidationException, SQLException, UserNotFoundException {
 		validatePost(post);
 
 		return postDao.createPost(post);

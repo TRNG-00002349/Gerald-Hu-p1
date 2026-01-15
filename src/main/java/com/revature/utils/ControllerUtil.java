@@ -11,5 +11,6 @@ public class ControllerUtil {
 
 	public static void handleBadRequestException(Exception e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to %s: %s", context.path(), e.getMessage()));
+		e.printStackTrace();
 	}
 }

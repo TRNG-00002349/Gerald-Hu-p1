@@ -10,23 +10,43 @@ import java.time.LocalDateTime;
 
 public class PostDao {
 
-	public Post createPost(Post post) throws SQLException {
+	public Post createPost(Post post) throws SQLException, UserNotFoundException {
+		// TODO: deleted users should not be able to make posts.
+		String CHECK_IF_AUTHOR_DELETED = """
+				SELECT deleted FROM users
+				WHERE
+				ID = ? AND deleted = FALSE
+				""";
 		String CREATE_POST_SQL = """
-				INSERT INTO posts (content, authorId)
+				INSERT INTO posts (content, author_id)
 				VALUES (?, ?)
 				""";
 		try (
 				var conn = DataSource.getConnection();
+				var checkStmt = conn.prepareStatement(CHECK_IF_AUTHOR_DELETED);
 				var pstmt = conn.prepareStatement(CREATE_POST_SQL, Statement.RETURN_GENERATED_KEYS);
 				) {
+			checkStmt.setInt(1, post.getAuthorId());
+			checkStmt.executeQuery();
+			ResultSet rs;
+			rs = checkStmt.getResultSet();
+			if (!rs.isBeforeFirst()) {
+				throw new UserNotFoundException(post.getAuthorId().toString());
+			}
+			rs.next();
+			if (rs.getBoolean(1)) {
+				throw new UserNotFoundException(post.getAuthorId().toString());
+			}
+
 			pstmt.setString(1, post.getContent());
 			pstmt.setInt(2, post.getAuthorId());
 			pstmt.executeUpdate();
 
-			ResultSet rs = pstmt.getGeneratedKeys();
+			rs = pstmt.getGeneratedKeys();
 			if(rs.next()) {
 				post.setId(rs.getInt("id"));
 			}
+			post.setCreatedAt(LocalDateTime.now());
 			return post;
 		}
 	}
