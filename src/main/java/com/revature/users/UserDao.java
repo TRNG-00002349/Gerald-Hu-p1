@@ -40,6 +40,7 @@ public class UserDao {
 	public List<UserInfoDTO> readAllUsers() throws SQLException {
 		String READ_USERS_SQL = """
 				SELECT * FROM users
+				WHERE deleted = FALSE;
 				""";
 		ArrayList<UserInfoDTO> userList = new ArrayList<>();
 		try (
@@ -62,6 +63,7 @@ public class UserDao {
 	public User readUser(String id) throws SQLException, UserNotFoundException {
 		String READ_ONE_USER_SQL = """
 				SELECT * FROM users WHERE id = ?
+				AND deleted = FALSE
 				""";
 		try(
 				var conn = DataSource.getConnection();
@@ -83,7 +85,6 @@ public class UserDao {
 		} catch (NumberFormatException e) {
 			throw new UserNotFoundException(id);
 		}
-		// TODO: We also want to get a list of posts belonging to this user. (Either the entire post or just the ID... probably entire post.)
 	}
 
 	public User updateUser(String id, User user) throws SQLException, UserNotFoundException {
@@ -117,13 +118,10 @@ public class UserDao {
 	}
 
 	public void deleteUser(String id) throws SQLException, UserNotFoundException {
-		/* TODO: When deleting a post, we should preserve posts made by that user,
-		but wipe the authorId -- as reddit does.
-		Deleting the post itself also cascades to likes, etc. Performance implications.
-		 */
 		String DELETE_ONE_USER_SQL = """
-				DELETE FROM USERS
-				WHERE ID = ?
+				UPDATE USERS
+				set DELETED = TRUE
+				WHERE id = ?
 				""";
 		try(
 				var conn = DataSource.getConnection();

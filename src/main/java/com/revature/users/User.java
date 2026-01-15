@@ -18,6 +18,8 @@ public class User {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
+	private Boolean deleted;
+
 	public User() {
 
 	}
@@ -84,5 +86,13 @@ public class User {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 }

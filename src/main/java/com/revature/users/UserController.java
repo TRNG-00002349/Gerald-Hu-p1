@@ -68,6 +68,8 @@ public class UserController implements Controller {
 
 	// TODO: get user by username
 
+	// TODO: get all posts by one user: /users/{user-id}/posts
+
 	// We allow changing username, password, email; these implicitly change updated_at
 	public void updateUser(Context context) throws SQLException, BadRequestException, UserNotFoundException {
 		UserAuthDTO user;
