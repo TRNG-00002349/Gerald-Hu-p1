@@ -66,7 +66,7 @@ public class UserController implements Controller {
 		// TODO: Write tests for: valid user id, stringy user ID, invalid user ID
 	}
 
-	// TODO: get user by username
+	// get user by username
 
 	// TODO: get all posts by one user: /users/{user-id}/posts
 
