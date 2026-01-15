@@ -22,7 +22,7 @@ public class PostController implements Controller {
 		server.post("/posts/", this::createNewBlogPost);
 		server.get("/posts/{post-id}", this::getBlogPost);
 		server.put("/posts/{post-id}", this::updateBlogPost);
-		server.delete("/posts", this::deleteBlogPost);
+		server.delete("/posts/{post-id}", this::deleteBlogPost);
 	}
 
 	@Override
@@ -59,8 +59,9 @@ public class PostController implements Controller {
 		context.status(HttpStatus.OK).json(post);
 	}
 
-	public void deleteBlogPost(Context context) {
-
+	public void deleteBlogPost(Context context) throws SQLException, PostNotFoundException {
+		postService.deletePost(context.pathParam("post-id"));
+		context.status(HttpStatus.NO_CONTENT);
 	}
 
 	private void handlePostNotFoundException(PostNotFoundException e, Context context) {

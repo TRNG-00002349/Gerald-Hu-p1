@@ -33,7 +33,7 @@ public class PostService {
 		return postDao.updatePost(postId, post);
 	}
 
-	public void deletePost(String postId) {
+	public void deletePost(String postId) throws SQLException, PostNotFoundException {
 		postDao.deletePost(postId);
 	}
 }

@@ -118,6 +118,8 @@ public class PostDao {
 				WHERE
 				id = ?
 				""";
+
+		// TODO: refactor so NumberFormatException is caught and returned at the controller level.
 		Integer authorId = getPostAuthorId(Integer.parseInt(postId));
 		// System.out.println(String.format("we should see an author ID here: %s", authorId));
 		checkIfAuthorDeleted(authorId);
@@ -142,7 +144,22 @@ public class PostDao {
 		}
 	}
 
-	public void deletePost(String postId) {
-
+	public void deletePost(String postId) throws SQLException, PostNotFoundException {
+		// TODO: some functions take string ID and some take int ID. fix for consistency. I guess.
+		String DELETE_POST_SQL = """
+				DELETE FROM posts WHERE id = ?
+				""";
+		try (
+				var conn = DataSource.getConnection();
+				var pstmt = conn.prepareStatement(DELETE_POST_SQL);
+		) {
+			pstmt.setInt(1, Integer.parseInt(postId));
+			Integer deleted = pstmt.executeUpdate();
+			if (deleted.equals(0)) {
+				throw new PostNotFoundException(postId);
+			}
+		} catch (NumberFormatException e) {
+			throw new PostNotFoundException(postId);
+		}
 	}
 }
