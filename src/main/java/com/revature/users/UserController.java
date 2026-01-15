@@ -76,7 +76,6 @@ public class UserController implements Controller {
 		try {
 			user = context.bodyAsClass(UserAuthDTO.class);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
 		}
 

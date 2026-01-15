@@ -21,7 +21,7 @@ public class PostController implements Controller {
 	public void registerRoutes(Javalin server) {
 		server.post("/posts/", this::createNewBlogPost);
 		server.get("/posts/{post-id}", this::getBlogPost);
-		server.put("/posts", this::updateBlogPost);
+		server.put("/posts/{post-id}", this::updateBlogPost);
 		server.delete("/posts", this::deleteBlogPost);
 	}
 
@@ -44,12 +44,19 @@ public class PostController implements Controller {
 	}
 
 	public void getBlogPost(Context context) throws SQLException, PostNotFoundException {
-		Post post = postService.readPost(context.pathParam("{post-id}"));
+		Post post = postService.readPost(context.pathParam("post-id"));
 		context.status(HttpStatus.OK).json(post);
 	}
 
-	public void updateBlogPost(Context context) {
-
+	public void updateBlogPost(Context context) throws UserNotFoundException, SQLException, PostNotFoundException, BadRequestException {
+		Post p;
+		try {
+			p = context.bodyAsClass(Post.class);
+		} catch (Exception e) {
+			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
+		}
+		Post post = postService.updatePost(context.pathParam("post-id"), p);
+		context.status(HttpStatus.OK).json(post);
 	}
 
 	public void deleteBlogPost(Context context) {

@@ -91,20 +91,17 @@ public class UserDao {
 		String UPDATE_USER_SQL = """
 				UPDATE USERS
 				SET username = ?,
-				email = ?,
-				hashed_password = ?,
-				salt = ?
+				updated_at = ?
 				WHERE id = ?
+				AND deleted = FALSE
 				""";
 		try(
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(UPDATE_USER_SQL);
 		) {
 			pstmt.setString(1, user.getUsername());
-			pstmt.setString(2, user.getEmail());
-			pstmt.setString(3, user.getHashedPassword());
-			pstmt.setString(4, user.getSalt());
-			pstmt.setInt(5, Integer.parseInt(id));
+			pstmt.setObject(2, LocalDateTime.now());
+			pstmt.setInt(3, Integer.parseInt(id));
 			Integer updated = pstmt.executeUpdate();
 			if (updated.equals(0)) {
 				throw new UserNotFoundException(id);

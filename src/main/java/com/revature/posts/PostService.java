@@ -29,7 +29,7 @@ public class PostService {
 		return postDao.readPost(postId);
 	}
 
-	public Post updatePost(String postId, Post post) {
+	public Post updatePost(String postId, Post post) throws UserNotFoundException, SQLException, PostNotFoundException {
 		return postDao.updatePost(postId, post);
 	}
 
