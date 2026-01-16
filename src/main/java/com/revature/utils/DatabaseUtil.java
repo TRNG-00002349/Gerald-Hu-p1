@@ -1,5 +1,6 @@
 package com.revature.utils;
 
+import com.revature.users.UserIsDeletedException;
 import com.revature.users.UserNotFoundException;
 
 import java.io.BufferedReader;
@@ -35,7 +36,7 @@ public class DatabaseUtil {
 	}
 
 
-	public static void checkIfAuthorDeleted(Integer authorId) throws SQLException, UserNotFoundException {
+	public static void checkIfAuthorDeleted(Integer authorId) throws SQLException, UserNotFoundException, UserIsDeletedException {
 		String CHECK_IF_AUTHOR_DELETED = """
 				SELECT deleted FROM users
 				WHERE
@@ -46,6 +47,9 @@ public class DatabaseUtil {
 				var checkAuthor = conn.prepareStatement(CHECK_IF_AUTHOR_DELETED);
 		) {
 
+			if (authorId == null) {
+				throw new UserNotFoundException("No user specified");
+			}
 			ResultSet rs;
 			checkAuthor.setInt(1, authorId);
 			checkAuthor.executeQuery();
@@ -55,7 +59,7 @@ public class DatabaseUtil {
 			}
 			rs.next();
 			if (rs.getBoolean("deleted")) {
-				throw new UserNotFoundException(String.format("User #%s is deactivated", authorId));
+				throw new UserIsDeletedException(authorId.toString());
 			}
 		}
 	}

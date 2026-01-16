@@ -4,6 +4,7 @@ import com.revature.posts.PostDao;
 import com.revature.posts.PostNotFoundException;
 import com.revature.users.User;
 import com.revature.users.UserDao;
+import com.revature.users.UserIsDeletedException;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.BadRequestException;
 import com.revature.utils.DatabaseUtil;
@@ -39,7 +40,7 @@ public class CommentService {
 		}
 	}
 
-	public Comment createCommentOnPost(String postId, Comment comment) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException {
+	public Comment createCommentOnPost(String postId, Comment comment) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, UserIsDeletedException {
 		DatabaseUtil.checkIfAuthorDeleted(comment.getAuthorId());
 		postDao.readPost(postId); // Check if post exists before commenting. Throw exception if not found.
 		validateComment(comment);

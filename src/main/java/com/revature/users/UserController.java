@@ -36,6 +36,7 @@ public class UserController implements Controller {
 	public void registerExceptions(Javalin server) {
 		server.exception(UserNotFoundException.class, this::handleUserNotFoundException);
 		server.exception(UserValidationException.class, this::handleUserValidationException);
+		server.exception(UserIsDeletedException.class, this::handleUserIsDeletedException);
 	}
 
 	public void registerUser(Context context) throws SQLException, BadRequestException {
@@ -103,6 +104,10 @@ public class UserController implements Controller {
 
 	private void handleUserValidationException(UserValidationException e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("User validation error: %s", e.getMessage()));
+	}
+
+	private void handleUserIsDeletedException(Exception e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("User #%s is deactivated and can't do this action", e.getMessage()));
 	}
 
 }

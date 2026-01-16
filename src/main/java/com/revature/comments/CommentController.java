@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.revature.posts.Post;
 import com.revature.posts.PostController;
 import com.revature.posts.PostNotFoundException;
+import com.revature.users.UserIsDeletedException;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
@@ -36,7 +37,7 @@ public class CommentController implements Controller {
 		server.exception(CommentValidationException.class, this::handleInvalidCommentException);
 	}
 
-	private void createCommentOnPost(Context context) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, BadRequestException {
+	private void createCommentOnPost(Context context) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, BadRequestException, UserIsDeletedException {
 		Comment c = commentService.createCommentOnPost(
 				context.pathParam("post-id"),
 				context.bodyAsClass(Comment.class)

@@ -2,6 +2,7 @@ package com.revature.posts;
 
 import com.revature.comments.Comment;
 import com.revature.users.UserInfoDTO;
+import com.revature.users.UserIsDeletedException;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
 import com.revature.utils.DatabaseUtil;
@@ -37,7 +38,7 @@ public class PostDao {
 		}
 	}
 
-	public Post createPost(Post post) throws SQLException, UserNotFoundException {
+	public Post createPost(Post post) throws SQLException, UserNotFoundException, UserIsDeletedException {
 		String CREATE_POST_SQL = """
 				INSERT INTO posts (content, author_id)
 				VALUES (?, ?)
@@ -111,7 +112,7 @@ public class PostDao {
 		}
 	}
 
-	public Post updatePost(String postId, Post post) throws UserNotFoundException, SQLException, PostNotFoundException {
+	public Post updatePost(String postId, Post post) throws UserNotFoundException, SQLException, PostNotFoundException, UserIsDeletedException {
 		String UPDATE_POST_SQL = """
 				UPDATE posts SET
 				content = ?,
@@ -164,7 +165,7 @@ public class PostDao {
 		}
 	}
 
-	public List<Post> readPostsByUser(String userId) throws UserNotFoundException, SQLException {
+	public List<Post> readPostsByUser(String authorId) throws UserNotFoundException, SQLException {
 		String READ_POSTS_BY_USER_SQL = """
 				SELECT * FROM posts
 				WHERE 
@@ -175,7 +176,7 @@ public class PostDao {
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(READ_POSTS_BY_USER_SQL);
 				) {
-			pstmt.setInt(1, Integer.parseInt(userId));
+			pstmt.setInt(1, Integer.parseInt(authorId));
 			ResultSet rs = pstmt.executeQuery();
 			if (rs == null) {
 				return postList;
@@ -191,7 +192,7 @@ public class PostDao {
 			return postList;
 
 		} catch (NumberFormatException e) {
-			throw new UserNotFoundException(userId);
+			throw new UserNotFoundException(authorId);
 		}
 	}
 }

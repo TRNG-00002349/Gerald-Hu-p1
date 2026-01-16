@@ -1,5 +1,6 @@
 package com.revature.posts;
 
+import com.revature.users.UserIsDeletedException;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
@@ -31,7 +32,7 @@ public class PostController implements Controller {
 		server.exception(PostNotFoundException.class, this::handlePostNotFoundException);
 	}
 
-	public void createNewBlogPost(Context context) throws BadRequestException, SQLException, PostValidationException, UserNotFoundException {
+	public void createNewBlogPost(Context context) throws BadRequestException, SQLException, PostValidationException, UserNotFoundException, UserIsDeletedException {
 		Post post;
 		try {
 			post = context.bodyAsClass(Post.class);
@@ -48,7 +49,7 @@ public class PostController implements Controller {
 		context.status(HttpStatus.OK).json(post);
 	}
 
-	public void updateBlogPost(Context context) throws UserNotFoundException, SQLException, PostNotFoundException, BadRequestException {
+	public void updateBlogPost(Context context) throws UserNotFoundException, SQLException, PostNotFoundException, BadRequestException, UserIsDeletedException {
 		Post p;
 		try {
 			p = context.bodyAsClass(Post.class);
