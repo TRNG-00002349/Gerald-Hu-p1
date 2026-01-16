@@ -14,4 +14,14 @@ public class ControllerUtil {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to %s: %s", context.path(), e.getMessage()));
 		e.printStackTrace();
 	}
+
+	public static void handleUnrecognizedPropertyException(Exception e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result("Unrecognized fields in request body");
+		e.printStackTrace();
+	}
+
+	public static void handleJsonParseException(Exception e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Couldn't parse request body: %s", context.body()));
+		e.printStackTrace();
+	}
 }
