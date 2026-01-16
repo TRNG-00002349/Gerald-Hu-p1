@@ -16,22 +16,25 @@ public class UserDao {
 
 	public User createUser(User user) throws SQLException {
 		String CREATE_USER_SQL = """
-				INSERT INTO users (username, email, hashed_password, salt)
-				VALUES (?, ?, ?, ?)
+				INSERT INTO users (username, email, hashed_password, salt, created_at)
+				VALUES (?, ?, ?, ?, ?)
 				""";
 		try (
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(CREATE_USER_SQL, Statement.RETURN_GENERATED_KEYS);
 		) {
+			LocalDateTime now = LocalDateTime.now();
 			pstmt.setString(1, user.getUsername());
 			pstmt.setString(2, user.getEmail());
 			pstmt.setString(3, user.getHashedPassword());
 			pstmt.setString(4, user.getSalt());
+			pstmt.setObject(5, now);
 			pstmt.executeUpdate();
 
 			ResultSet rs = pstmt.getGeneratedKeys();
 			if(rs.next()) {
 				user.setId(rs.getInt("id"));
+				user.setCreatedAt(now);
 			}
 			return user;
 		}

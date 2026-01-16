@@ -43,6 +43,7 @@ public class UserService {
 		return salt;
 	}
 
+	// TODO: update this to use bcrypt instead. jesus
 	private static String hashPassword(String password, byte[] salt) throws BadRequestException {
 		try {
 			KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);

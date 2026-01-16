@@ -16,7 +16,7 @@ public class PostService {
 	}
 
 	private void validatePost(Post post) throws PostValidationException {
-		if (post.getContent().isEmpty()) {
+		if (post.getContent() == null || post.getContent().isEmpty()) {
 			throw new PostValidationException("Your post can't be empty!");
 		}
 	}
