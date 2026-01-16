@@ -1,5 +1,6 @@
 package com.revature.posts;
 
+import com.revature.comments.Comment;
 import com.revature.users.UserInfoDTO;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
@@ -89,9 +90,14 @@ public class PostDao {
 				SELECT * FROM POSTS WHERE
 				ID = ?
 				""";
+		String READ_POST_COMMENTS_SQL = """
+				SELECT * FROM COMMENTS WHERE
+				POST_ID = ?
+				""";
 		try (
 				var conn = DataSource.getConnection();
-				var pstmt = conn.prepareStatement(READ_POST_SQL)
+				var pstmt = conn.prepareStatement(READ_POST_SQL);
+				var pstmt2 = conn.prepareStatement(READ_POST_COMMENTS_SQL);
 				) {
 			pstmt.setInt(1, Integer.parseInt(postId));
 			pstmt.executeQuery();
@@ -107,6 +113,23 @@ public class PostDao {
 			p.setContent(rs.getString("content"));
 			p.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
 			p.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+
+			pstmt2.setInt(1, Integer.parseInt(postId));
+			pstmt2.executeQuery();
+			ResultSet rs2 = pstmt2.getResultSet();
+			List<Comment> commentList = new LinkedList<>();
+			p.setCommentList(commentList);
+			if (!rs2.isBeforeFirst()) {
+				return p;
+			}
+			while (rs2.next()) {
+				Comment c = new Comment();
+				c.setAuthorId(rs2.getInt("author_id"));
+				c.setContent(rs2.getString("content"));
+				c.setCreatedAt(rs2.getObject("created_at", LocalDateTime.class));
+				c.setUpdatedAt(rs2.getObject("updated_at", LocalDateTime.class));
+				commentList.add(c);
+			}
 			return p;
 		} catch (NumberFormatException e) {
 			throw new PostNotFoundException(postId);

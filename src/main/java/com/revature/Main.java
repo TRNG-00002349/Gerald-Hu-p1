@@ -1,5 +1,8 @@
 package com.revature;
 
+import com.revature.comments.CommentController;
+import com.revature.comments.CommentDao;
+import com.revature.comments.CommentService;
 import com.revature.health.HealthController;
 import com.revature.posts.Post;
 import com.revature.posts.PostController;
@@ -30,6 +33,7 @@ public class Main {
 
 			UserDao userDao = new UserDao();
 			PostDao postDao = new PostDao();
+			CommentDao commentDao = new CommentDao();
 
 			HealthController healthController = new HealthController();
 			UserController userController = new UserController(
@@ -41,12 +45,18 @@ public class Main {
 					new PostService()
 							.setPostDao(postDao)
 			);
+			CommentController commentController = new CommentController(
+					new CommentService()
+							.setPostDao(postDao)
+							.setCommentDao(commentDao)
+			);
 
 			WebServer server = WebServer.builder()
 					.port(10001)
 					.addController(healthController)
 					.addController(userController)
 					.addController(postController)
+					.addController(commentController)
 					.build();
 			server.start();
 		} catch (IOException e) {

@@ -1,6 +1,9 @@
 package com.revature.posts;
 
+import com.revature.comments.Comment;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Post {
 	private Integer id;
@@ -10,14 +13,10 @@ public class Post {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
+	private List<Comment> commentList;
+
 	public Post() {
 
-	}
-
-	public Post(Integer id, String content, Integer authorId) {
-		this.id = id;
-		this.content = content;
-		this.authorId = authorId;
 	}
 
 	public Integer getId() {
@@ -59,5 +58,14 @@ public class Post {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	public List<Comment> getCommentList() {
+		return commentList;
+	}
+
+	public void setCommentList(List<Comment> commentList) {
+		this.commentList = commentList;
+	}
+
 
 }

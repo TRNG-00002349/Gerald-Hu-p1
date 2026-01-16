@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.SQLException;
 
 public class PostController implements Controller {
-	private final PostService postService;
+	private static PostService postService;
 
 	public PostController(PostService postService) {
 		this.postService = postService;
@@ -20,7 +20,7 @@ public class PostController implements Controller {
 	@Override
 	public void registerRoutes(Javalin server) {
 		server.post("/posts/", this::createNewBlogPost);
-		server.get("/posts/{post-id}", this::getBlogPost);
+		server.get("/posts/{post-id}", PostController::getBlogPost);
 		server.put("/posts/{post-id}", this::updateBlogPost);
 		server.delete("/posts/{post-id}", this::deleteBlogPost);
 	}
@@ -43,7 +43,7 @@ public class PostController implements Controller {
 		context.status(HttpStatus.CREATED).json(persistedPost);
 	}
 
-	public void getBlogPost(Context context) throws SQLException, PostNotFoundException {
+	public static void getBlogPost(Context context) throws SQLException, PostNotFoundException {
 		Post post = postService.readPost(context.pathParam("post-id"));
 		context.status(HttpStatus.OK).json(post);
 	}

@@ -56,3 +56,5 @@ VALUES ('comment by active user on post by deleted user', 1, 2);
 INSERT INTO comments (content, author_id, post_id)
 VALUES ('comment by deleted user on post by deleted user', 2, 2);
 
+INSERT INTO comments (content, author_id, post_id)
+VALUES ('same user can leave multiple comments', 1, 1);
