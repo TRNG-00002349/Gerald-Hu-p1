@@ -15,31 +15,6 @@ import java.util.List;
 
 public class PostDao {
 
-	private void checkIfAuthorDeleted(Integer authorId) throws SQLException, UserNotFoundException {
-		String CHECK_IF_AUTHOR_DELETED = """
-				SELECT deleted FROM users
-				WHERE
-				ID = ? AND deleted = FALSE
-				""";
-		try(
-				var conn = DataSource.getConnection();
-				var checkAuthor = conn.prepareStatement(CHECK_IF_AUTHOR_DELETED);
-				) {
-
-			ResultSet rs;
-			checkAuthor.setInt(1, authorId);
-			checkAuthor.executeQuery();
-			rs = checkAuthor.getResultSet();
-			if (!rs.isBeforeFirst()) {
-				throw new UserNotFoundException(authorId.toString());
-			}
-			rs.next();
-			if (rs.getBoolean("deleted")) {
-				throw new UserNotFoundException(authorId.toString());
-			}
-		}
-	}
-
 	private Integer getPostAuthorId(Integer postId) throws SQLException, PostNotFoundException {
 		String GET_AUTHOR_ID = """
 				SELECT author_id FROM posts
@@ -67,7 +42,7 @@ public class PostDao {
 				INSERT INTO posts (content, author_id)
 				VALUES (?, ?)
 				""";
-		checkIfAuthorDeleted(post.getAuthorId());
+		DatabaseUtil.checkIfAuthorDeleted(post.getAuthorId());
 
 		try (
 				var conn = DataSource.getConnection();
@@ -147,7 +122,7 @@ public class PostDao {
 
 		Integer authorId = getPostAuthorId(Integer.parseInt(postId));
 		// System.out.println(String.format("we should see an author ID here: %s", authorId));
-		checkIfAuthorDeleted(authorId);
+		DatabaseUtil.checkIfAuthorDeleted(authorId);
 
 		try (
 				var conn = DataSource.getConnection();

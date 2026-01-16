@@ -49,6 +49,7 @@ public class Main {
 					new CommentService()
 							.setPostDao(postDao)
 							.setCommentDao(commentDao)
+							.setUserDao(userDao)
 			);
 
 			WebServer server = WebServer.builder()
