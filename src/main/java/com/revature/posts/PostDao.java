@@ -1,5 +1,6 @@
 package com.revature.posts;
 
+import com.revature.users.UserInfoDTO;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
 import com.revature.utils.DatabaseUtil;
@@ -8,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PostDao {
 
@@ -119,7 +122,6 @@ public class PostDao {
 				id = ?
 				""";
 
-		// TODO: refactor so NumberFormatException is caught and returned at the controller level.
 		Integer authorId = getPostAuthorId(Integer.parseInt(postId));
 		// System.out.println(String.format("we should see an author ID here: %s", authorId));
 		checkIfAuthorDeleted(authorId);
@@ -140,6 +142,7 @@ public class PostDao {
 			post.setAuthorId(authorId);
 			return post;
 		} catch (NumberFormatException e) {
+			// TODO: refactor so NumberFormatException is caught and returned at the controller level.
 			throw new PostNotFoundException(post.getId().toString());
 		}
 	}
@@ -160,6 +163,37 @@ public class PostDao {
 			}
 		} catch (NumberFormatException e) {
 			throw new PostNotFoundException(postId);
+		}
+	}
+
+	public List<Post> readPostsByUser(String userId) throws UserNotFoundException, SQLException {
+		String READ_POSTS_BY_USER_SQL = """
+				SELECT * FROM posts
+				WHERE 
+				author_id = ?
+				""";
+		LinkedList<Post> postList = new LinkedList<>();
+		try (
+				var conn = DataSource.getConnection();
+				var pstmt = conn.prepareStatement(READ_POSTS_BY_USER_SQL);
+				) {
+			pstmt.setInt(1, Integer.parseInt(userId));
+			ResultSet rs = pstmt.executeQuery();
+			if (rs == null) {
+				return postList;
+			}
+			while (rs.next()) {
+				Post p = new Post();
+				p.setId(rs.getInt("id"));
+				p.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+				p.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+				p.setContent(rs.getString("content"));
+				postList.add(p);
+			}
+			return postList;
+
+		} catch (NumberFormatException e) {
+			throw new UserNotFoundException(userId);
 		}
 	}
 }

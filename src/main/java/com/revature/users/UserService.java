@@ -1,5 +1,7 @@
 package com.revature.users;
 
+import com.revature.posts.Post;
+import com.revature.posts.PostDao;
 import com.revature.utils.BadRequestException;
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -17,10 +19,21 @@ import java.util.List;
  */
 public class UserService {
 
-	private final UserDao userDao;
+	private UserDao userDao;
+	private PostDao postDao;
 
-	public UserService(UserDao userDao) {
+	public UserService() {
+
+	}
+
+	public UserService setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+		return this;
+	}
+
+	public UserService setPostDao(PostDao postDao) {
+		this.postDao = postDao;
+		return this;
 	}
 
 	private static byte[] salt() {
@@ -91,5 +104,9 @@ public class UserService {
 
 	public void deleteUser(String id) throws SQLException, UserNotFoundException {
 		userDao.deleteUser(id);
+	}
+
+	public List<Post> getUserPosts(String s) throws UserNotFoundException, SQLException {
+		return postDao.readPostsByUser(s);
 	}
 }

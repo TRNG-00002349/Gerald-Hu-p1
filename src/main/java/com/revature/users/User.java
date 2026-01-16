@@ -1,9 +1,11 @@
 package com.revature.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.revature.posts.Post;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class User {
 	private Integer id;
@@ -19,6 +21,8 @@ public class User {
 	private LocalDateTime updatedAt;
 
 	private Boolean deleted;
+
+	private List<Post> userPosts;
 
 	public User() {
 
@@ -95,4 +99,14 @@ public class User {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
+
+
+	public List<Post> getUserPosts() {
+		return userPosts;
+	}
+
+	public void setUserPosts(List<Post> userPosts) {
+		this.userPosts = userPosts;
+	}
+
 }

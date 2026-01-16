@@ -1,9 +1,11 @@
 package com.revature;
 
 import com.revature.health.HealthController;
+import com.revature.posts.Post;
 import com.revature.posts.PostController;
 import com.revature.posts.PostDao;
 import com.revature.posts.PostService;
+import com.revature.users.User;
 import com.revature.users.UserController;
 import com.revature.users.UserDao;
 import com.revature.users.UserService;
@@ -26,16 +28,18 @@ public class Main {
 				System.out.println("Database initialized");
 			}
 
+			UserDao userDao = new UserDao();
+			PostDao postDao = new PostDao();
+
 			HealthController healthController = new HealthController();
 			UserController userController = new UserController(
-					new UserService(
-							new UserDao()
-					)
+					new UserService()
+							.setUserDao(userDao)
+							.setPostDao(postDao)
 			);
 			PostController postController = new PostController(
-					new PostService(
-							new PostDao()
-					)
+					new PostService()
+							.setPostDao(postDao)
 			);
 
 			WebServer server = WebServer.builder()

@@ -1,5 +1,6 @@
 package com.revature.users;
 
+import com.revature.posts.Post;
 import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
 import io.javalin.Javalin;
@@ -26,6 +27,7 @@ public class UserController implements Controller {
 		server.post("/users", this::registerUser);
 		server.get("/users", this::showAllUsers);
 		server.get("/users/{user-id}", this::showOneUser);
+		server.get("/users/{user-id}/posts", this::showOneUsersPosts);
 		server.put("/users/{user-id}", this::updateUser);
 		server.delete("/users/{user-id}", this::deleteUser);
 	}
@@ -68,7 +70,13 @@ public class UserController implements Controller {
 
 	// get user by username
 
-	// TODO: get all posts by one user: /users/{user-id}/posts
+	public void showOneUsersPosts(Context context) throws UserNotFoundException, SQLException {
+		User user = userService.getUser(context.pathParam("user-id"));
+		List<Post> userPosts = userService.getUserPosts(context.pathParam("user-id"));
+		user.setUserPosts(userPosts);
+
+		context.status(HttpStatus.OK).json(user);
+	}
 
 	// We allow changing username, password, email; these implicitly change updated_at
 	public void updateUser(Context context) throws SQLException, BadRequestException, UserNotFoundException {

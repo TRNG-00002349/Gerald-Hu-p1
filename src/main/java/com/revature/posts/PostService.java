@@ -6,12 +6,14 @@ import java.sql.SQLException;
 
 public class PostService {
 
-	private final PostDao postDao;
+	private PostDao postDao;
 
-	public PostService(PostDao postDao) {
+	public PostService() {}
+
+	public PostService setPostDao(PostDao postDao) {
 		this.postDao = postDao;
+		return this;
 	}
-
 
 	private void validatePost(Post post) throws PostValidationException {
 		if (post.getContent().isEmpty()) {
