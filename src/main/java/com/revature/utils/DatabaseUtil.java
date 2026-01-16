@@ -21,11 +21,11 @@ public class DatabaseUtil {
 		String script = scriptReader.lines().collect(Collectors.joining("\n"));
 		String[] statements = script.split(";");
 
-		for(String sqlString : statements) {
-			sqlString = sqlString.trim();
-			try (
-					Statement stmt = DataSource.getConnection().createStatement();
-			) {
+		try (
+				Statement stmt = DataSource.getConnection().createStatement()
+				) {
+			for(String sqlString : statements) {
+				sqlString = sqlString.trim();
 				stmt.execute(sqlString);
 			}
 		}

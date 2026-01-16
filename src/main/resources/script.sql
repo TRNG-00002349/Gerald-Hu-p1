@@ -17,10 +17,20 @@ CREATE TABLE IF NOT EXISTS posts (
 	author_id INTEGER references users (id)
 );
 
+CREATE TABLE IF NOT EXISTS comments (
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP,
+	content VARCHAR,
+	author_id INTEGER references users (id),
+	post_id INTEGER references posts (id)
+);
 
-TRUNCATE users, posts;
+
+TRUNCATE users, posts, comments;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE posts_id_seq RESTART WITH 1;
+ALTER SEQUENCE comments_id_seq RESTART WITH 1;
 
 INSERT INTO users (username, email, hashed_password, salt)
 VALUES ('test-user', 'test@example.com', 'not actually hashed', 'mmm salt');
@@ -33,3 +43,16 @@ VALUES ('test post please ignore', 1);
 
 INSERT INTO posts (content, author_id)
 VALUES ('test post by deleted author', 2);
+
+INSERT INTO comments (content, author_id, post_id)
+VALUES ('comment by active user on post by active user', 1, 1);
+
+INSERT INTO comments (content, author_id, post_id)
+VALUES ('comment by deleted user on post', 2, 1);
+
+INSERT INTO comments (content, author_id, post_id)
+VALUES ('comment by active user on post by deleted user', 1, 2);
+
+INSERT INTO comments (content, author_id, post_id)
+VALUES ('comment by deleted user on post by deleted user', 2, 2);
+
