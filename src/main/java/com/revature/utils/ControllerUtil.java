@@ -24,4 +24,8 @@ public class ControllerUtil {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("Couldn't parse request body: %s", context.body()));
 		e.printStackTrace();
 	}
+
+	public static void handleInvalidFormatException(Exception e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Invalid format: %s", context.body()));
+	}
 }

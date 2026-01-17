@@ -1,6 +1,7 @@
 package com.revature.utils;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import io.javalin.Javalin;
 
@@ -29,6 +30,7 @@ public class WebServer {
 		server.exception(BadRequestException.class, ControllerUtil::handleBadRequestException);
 		server.exception(UnrecognizedPropertyException.class, ControllerUtil::handleUnrecognizedPropertyException);
 		server.exception(JsonParseException.class, ControllerUtil::handleJsonParseException);
+		server.exception(InvalidFormatException.class, ControllerUtil::handleInvalidFormatException);
 	}
 
 	public void start() {

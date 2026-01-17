@@ -25,12 +25,13 @@ public class CommentController implements Controller {
 
 	@Override
 	public void registerRoutes(Javalin server) {
-		// Base URL of /posts/{post-id}/comments.
 		// Going to /posts/{post-id} will also show that post's comments, without needing to append /comments to it.
 
 		server.post("/posts/{post-id}/comments", this::createCommentOnPost);
 		server.get("/posts/{post-id}/comments", PostController::getBlogPost);
+		server.put("/posts/{post-id}/comments/{comment-id}", this::updateCommentOnPost);
 	}
+
 
 	@Override
 	public void registerExceptions(Javalin server) {
@@ -40,6 +41,14 @@ public class CommentController implements Controller {
 	private void createCommentOnPost(Context context) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, BadRequestException, UserIsDeletedException {
 		Comment c = commentService.createCommentOnPost(
 				context.pathParam("post-id"),
+				context.bodyAsClass(Comment.class)
+		);
+		context.status(HttpStatus.CREATED).json(c);
+	}
+
+	private void updateCommentOnPost(Context context) throws UserNotFoundException, SQLException, CommentValidationException, UserIsDeletedException, CommentNotFoundException {
+		Comment c = commentService.updateCommentOnPost(
+				context.pathParam("comment-id"),
 				context.bodyAsClass(Comment.class)
 		);
 		context.status(HttpStatus.OK).json(c);

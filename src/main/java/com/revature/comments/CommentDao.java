@@ -1,5 +1,6 @@
 package com.revature.comments;
 
+import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
 
 import java.sql.PreparedStatement;
@@ -30,6 +31,34 @@ public class CommentDao {
 				comment.setCreatedAt(now);
 			}
 			return comment;
+		}
+	}
+
+	public Comment updateCommentOnPost(String commentId, Comment comment) throws SQLException, CommentNotFoundException {
+		String UPDATE_COMMENT_ON_POST_SQL = """
+				UPDATE comments SET
+				content = ?,
+				updated_at = ?
+				WHERE
+				id = ?
+				""";
+		try (
+				var conn = DataSource.getConnection();
+				var pstmt = conn.prepareStatement(UPDATE_COMMENT_ON_POST_SQL);
+				) {
+			LocalDateTime now = LocalDateTime.now();
+			pstmt.setString(1, comment.getContent());
+			pstmt.setObject(2, now);
+			pstmt.setInt(3, Integer.parseInt(commentId));
+			Integer updated = pstmt.executeUpdate();
+			if (updated.equals(0)) {
+				throw new CommentNotFoundException(commentId);
+			}
+			comment.setId(Integer.parseInt(commentId));
+			comment.setUpdatedAt(now);
+			return comment;
+		} catch (NumberFormatException e) {
+			throw new CommentNotFoundException(commentId);
 		}
 	}
 }

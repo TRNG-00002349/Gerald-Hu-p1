@@ -41,10 +41,23 @@ public class CommentService {
 	}
 
 	public Comment createCommentOnPost(String postId, Comment comment) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, UserIsDeletedException {
+		if (comment.getAuthorId() == null) {
+			throw new UserNotFoundException("no user specified");
+		}
 		DatabaseUtil.checkIfAuthorDeleted(comment.getAuthorId());
 		postDao.readPost(postId); // Check if post exists before commenting. Throw exception if not found.
 		validateComment(comment);
 
 		return commentDao.createCommentOnPost(postId, comment);
+	}
+
+	public Comment updateCommentOnPost(String commentId, Comment comment) throws UserNotFoundException, SQLException, UserIsDeletedException, CommentValidationException, CommentNotFoundException {
+		if (comment.getAuthorId() == null) {
+			throw new UserNotFoundException("no user specified");
+		}
+		DatabaseUtil.checkIfAuthorDeleted(comment.getAuthorId());
+		validateComment(comment);
+
+		return commentDao.updateCommentOnPost(commentId, comment);
 	}
 }
