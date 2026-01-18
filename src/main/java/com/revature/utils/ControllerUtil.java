@@ -10,9 +10,12 @@ import java.sql.SQLException;
 
 public class ControllerUtil {
 	public static void handleDBException(SQLException e, Context ctx) {
-		// TODO: if-clause for duplicate username or other keys; we want that msg to be user-friendly
-		ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(String.format("A database error occurred: %s", e.getMessage()));
-		e.printStackTrace();
+		if (e.getSQLState().equals("23505")) {
+			ctx.status(HttpStatus.BAD_REQUEST).result("Duplicate username or email already exists");
+		} else {
+			ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(String.format("A database error occurred: %s", e.getMessage()));
+			e.printStackTrace();
+		}
 	}
 
 	public static void handleBadRequestException(BadRequestException e, Context context) {
@@ -36,6 +39,6 @@ public class ControllerUtil {
 	}
 
 	public static void handleNumberFormatException(NumberFormatException e, Context context) {
-		context.status(HttpStatus.BAD_REQUEST).result(String.format("Invalid number: %s", ))
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Invalid number: %s", e.getMessage()));
 	}
 }
