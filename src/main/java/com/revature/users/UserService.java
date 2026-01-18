@@ -68,7 +68,7 @@ public class UserService {
 		// TODO: additional validations (username has no underscores, no spaces, force lowercasing)
 	}
 
-	public User saveUser(UserAuthDTO user) throws SQLException {
+	public User createUser(UserAuthDTO user) throws SQLException {
 		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 

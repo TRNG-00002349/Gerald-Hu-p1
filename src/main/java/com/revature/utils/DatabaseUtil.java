@@ -37,7 +37,7 @@ public class DatabaseUtil {
 	}
 
 
-	public static void checkIfAuthorDeleted(Integer authorId) throws SQLException, UserNotFoundException, UserIsDeletedException {
+	public static void checkIfAuthorDeleted(Integer authorId) throws SQLException {
 		String CHECK_IF_AUTHOR_DELETED = """
 				SELECT deleted FROM users
 				WHERE

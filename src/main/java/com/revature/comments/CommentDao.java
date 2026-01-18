@@ -1,6 +1,5 @@
 package com.revature.comments;
 
-import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
 
 import java.sql.PreparedStatement;
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 
 public class CommentDao {
 	public Comment createCommentOnPost(String postId, Comment comment) throws SQLException {
-		// TODO: validate comment isn't empty
 		String CREATE_COMMENT_ON_POST_SQL = """
 				INSERT INTO comments (created_at, content, author_id, post_id)
 				VALUES (?, ?, ?, ?)

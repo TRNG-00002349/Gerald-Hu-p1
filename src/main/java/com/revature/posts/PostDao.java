@@ -80,7 +80,6 @@ public class PostDao {
 				throw new PostNotFoundException(postId);
 			}
 			rs.next();
-			// Post p = new post or whatever
 			Post p = new Post();
 			p.setId(rs.getInt("id"));
 			p.setAuthorId(rs.getInt("author_id"));
@@ -98,6 +97,7 @@ public class PostDao {
 			}
 			while (rs2.next()) {
 				Comment c = new Comment();
+				c.setId(rs2.getInt("id"));
 				c.setAuthorId(rs2.getInt("author_id"));
 				c.setContent(rs2.getString("content"));
 				c.setCreatedAt(rs2.getObject("created_at", LocalDateTime.class));

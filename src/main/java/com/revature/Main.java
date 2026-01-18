@@ -20,6 +20,13 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class Main {
+	// TODO: user authE/authZ. ALso, can't log in as a deleted user.
+	// Javalin before() handler: before *any action*, check if user has a correct auth token,
+	// and check if user is not deleted.
+
+
+	// TODO: client doesn't need to know createdAt or updatedAt, and I don't like setting it.
+
 	public static void main(String[] args) {
 		System.out.println("Hello world!");
 

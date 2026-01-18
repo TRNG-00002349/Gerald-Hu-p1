@@ -6,7 +6,6 @@ import com.revature.utils.Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -48,7 +47,7 @@ public class UserController implements Controller {
 		}
 
 		// Send user to service layer (and then to DAO layer); get result back
-		User persistedUser = userService.saveUser(user);
+		User persistedUser = userService.createUser(user);
 
 		// Prep the response
 		context.status(HttpStatus.CREATED);
