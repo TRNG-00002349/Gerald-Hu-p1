@@ -72,7 +72,6 @@ public class UserDao {
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(READ_ONE_USER_SQL);
 		)	{
-			// TODO: add UserIsDeleted check
 			pstmt.setInt(1, Integer.parseInt(id));
 			pstmt.executeQuery();
 			ResultSet rs = pstmt.getResultSet();
@@ -102,7 +101,6 @@ public class UserDao {
 				WHERE id = ?
 				AND deleted = FALSE
 				""";
-		// TODO: add UserIsDeleted check, tell client we can't update deleted users
 		try(
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(UPDATE_USER_SQL);

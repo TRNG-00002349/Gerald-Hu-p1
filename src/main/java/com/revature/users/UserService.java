@@ -44,7 +44,7 @@ public class UserService {
 	}
 
 	// TODO: update this to use bcrypt instead. jesus
-	private static String hashPassword(String password, byte[] salt) throws BadRequestException {
+	private static String hashPassword(String password, byte[] salt) {
 		try {
 			KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
@@ -55,7 +55,7 @@ public class UserService {
 		}
 	}
 
-	private void validateUser(UserAuthDTO user) throws UserValidationException {
+	private void validateUserInfo(UserAuthDTO user) {
 		if (user.getUsername() == null) {
 			throw new UserValidationException("No username provided");
 		}
@@ -72,7 +72,7 @@ public class UserService {
 		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 
-		validateUser(user);
+		validateUserInfo(user);
 
 		User u = new User();
 		u.setHashedPassword(hashedPassword);
@@ -93,7 +93,7 @@ public class UserService {
 	public User updateUser(String id, UserAuthDTO user) throws SQLException {
 		byte[] salt = salt();
 		String hashedPassword = hashPassword(user.getPassword(), salt);
-		validateUser(user);
+		validateUserInfo(user);
 
 		User u = new User();
 		u.setUsername(user.getUsername());
