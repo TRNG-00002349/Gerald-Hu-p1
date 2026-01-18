@@ -1,13 +1,10 @@
 package com.revature.posts;
 
-import com.revature.users.UserIsDeletedException;
-import com.revature.users.UserNotFoundException;
 import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 
@@ -32,7 +29,7 @@ public class PostController implements Controller {
 		server.exception(PostNotFoundException.class, this::handlePostNotFoundException);
 	}
 
-	public void createNewBlogPost(Context context) throws BadRequestException, SQLException, PostValidationException, UserNotFoundException, UserIsDeletedException {
+	public void createNewBlogPost(Context context) throws SQLException {
 		Post post;
 		try {
 			post = context.bodyAsClass(Post.class);
@@ -44,12 +41,12 @@ public class PostController implements Controller {
 		context.status(HttpStatus.CREATED).json(persistedPost);
 	}
 
-	public static void getBlogPost(Context context) throws SQLException, PostNotFoundException {
+	public static void getBlogPost(Context context) throws SQLException {
 		Post post = postService.readPost(context.pathParam("post-id"));
 		context.status(HttpStatus.OK).json(post);
 	}
 
-	public void updateBlogPost(Context context) throws UserNotFoundException, SQLException, PostNotFoundException, BadRequestException, UserIsDeletedException {
+	public void updateBlogPost(Context context) throws SQLException {
 		Post p;
 		try {
 			p = context.bodyAsClass(Post.class);
@@ -60,7 +57,7 @@ public class PostController implements Controller {
 		context.status(HttpStatus.OK).json(post);
 	}
 
-	public void deleteBlogPost(Context context) throws SQLException, PostNotFoundException {
+	public void deleteBlogPost(Context context) throws SQLException {
 		postService.deletePost(context.pathParam("post-id"));
 		context.status(HttpStatus.NO_CONTENT);
 	}

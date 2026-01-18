@@ -1,7 +1,6 @@
 package com.revature.posts;
 
-public class PostNotFoundException extends Exception {
-	// TODO: Consider refactoring to just generic "Entity not found" exception
+public class PostNotFoundException extends RuntimeException {
 	public PostNotFoundException(String message) {
 		super(message);
 	}

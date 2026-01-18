@@ -1,8 +1,5 @@
 package com.revature.posts;
 
-import com.revature.users.UserIsDeletedException;
-import com.revature.users.UserNotFoundException;
-
 import java.sql.SQLException;
 
 public class PostService {
@@ -16,27 +13,27 @@ public class PostService {
 		return this;
 	}
 
-	private void validatePost(Post post) throws PostValidationException {
+	private void validatePost(Post post) {
 		if (post.getContent() == null || post.getContent().isEmpty()) {
 			throw new PostValidationException("Your post can't be empty!");
 		}
 	}
 
-	public Post saveNewPost(Post post) throws PostValidationException, SQLException, UserNotFoundException, UserIsDeletedException {
+	public Post saveNewPost(Post post) throws SQLException {
 		validatePost(post);
 
 		return postDao.createPost(post);
 	}
 
-	public Post readPost(String postId) throws SQLException, PostNotFoundException {
+	public Post readPost(String postId) throws SQLException {
 		return postDao.readPost(postId);
 	}
 
-	public Post updatePost(String postId, Post post) throws UserNotFoundException, SQLException, PostNotFoundException, UserIsDeletedException {
+	public Post updatePost(String postId, Post post) throws SQLException {
 		return postDao.updatePost(postId, post);
 	}
 
-	public void deletePost(String postId) throws SQLException, PostNotFoundException {
+	public void deletePost(String postId) throws SQLException {
 		postDao.deletePost(postId);
 	}
 }

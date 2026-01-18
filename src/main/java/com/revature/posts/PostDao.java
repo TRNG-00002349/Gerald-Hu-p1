@@ -1,8 +1,6 @@
 package com.revature.posts;
 
 import com.revature.comments.Comment;
-import com.revature.users.UserInfoDTO;
-import com.revature.users.UserIsDeletedException;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
 import com.revature.utils.DatabaseUtil;
@@ -16,7 +14,7 @@ import java.util.List;
 
 public class PostDao {
 
-	private Integer getPostAuthorId(Integer postId) throws SQLException, PostNotFoundException {
+	private Integer getPostAuthorId(Integer postId) throws SQLException {
 		String GET_AUTHOR_ID = """
 				SELECT author_id FROM posts
 				WHERE
@@ -38,7 +36,7 @@ public class PostDao {
 		}
 	}
 
-	public Post createPost(Post post) throws SQLException, UserNotFoundException, UserIsDeletedException {
+	public Post createPost(Post post) throws SQLException {
 		String CREATE_POST_SQL = """
 				INSERT INTO posts (content, author_id)
 				VALUES (?, ?)
@@ -61,7 +59,7 @@ public class PostDao {
 		}
 	}
 
-	public Post readPost(String postId) throws SQLException, PostNotFoundException {
+	public Post readPost(String postId) throws SQLException {
 		String READ_POST_SQL = """
 				SELECT * FROM POSTS WHERE
 				ID = ?
@@ -112,7 +110,7 @@ public class PostDao {
 		}
 	}
 
-	public Post updatePost(String postId, Post post) throws UserNotFoundException, SQLException, PostNotFoundException, UserIsDeletedException {
+	public Post updatePost(String postId, Post post) throws SQLException {
 		String UPDATE_POST_SQL = """
 				UPDATE posts SET
 				content = ?,
@@ -146,8 +144,9 @@ public class PostDao {
 		}
 	}
 
-	public void deletePost(String postId) throws SQLException, PostNotFoundException {
+	public void deletePost(String postId) throws SQLException {
 		// TODO: some functions take string ID and some take int ID. fix for consistency. I guess.
+		// TODO: When deleting a post, cascade delete comments
 		String DELETE_POST_SQL = """
 				DELETE FROM posts WHERE id = ?
 				""";
@@ -165,7 +164,7 @@ public class PostDao {
 		}
 	}
 
-	public List<Post> readPostsByUser(String authorId) throws UserNotFoundException, SQLException {
+	public List<Post> readPostsByUser(String authorId) throws SQLException {
 		String READ_POSTS_BY_USER_SQL = """
 				SELECT * FROM posts
 				WHERE 
