@@ -1,17 +1,10 @@
 package com.revature.comments;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.revature.posts.Post;
 import com.revature.posts.PostController;
-import com.revature.posts.PostNotFoundException;
-import com.revature.users.UserIsDeletedException;
-import com.revature.users.UserNotFoundException;
-import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 
@@ -44,7 +37,7 @@ public class CommentController implements Controller {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("Comment not found: %s", e.getMessage()));
 	}
 
-	private void createCommentOnPost(Context context) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, BadRequestException, UserIsDeletedException {
+	private void createCommentOnPost(Context context) throws SQLException {
 		Comment c = commentService.createCommentOnPost(
 				context.pathParam("post-id"),
 				context.bodyAsClass(Comment.class)
@@ -52,7 +45,7 @@ public class CommentController implements Controller {
 		context.status(HttpStatus.CREATED).json(c);
 	}
 
-	private void updateCommentOnPost(Context context) throws UserNotFoundException, SQLException, CommentValidationException, UserIsDeletedException, CommentNotFoundException {
+	private void updateCommentOnPost(Context context) throws SQLException {
 		Comment c = commentService.updateCommentOnPost(
 				context.pathParam("comment-id"),
 				context.bodyAsClass(Comment.class)
@@ -60,7 +53,7 @@ public class CommentController implements Controller {
 		context.status(HttpStatus.OK).json(c);
 	}
 
-	private void deleteCommentOnPost(Context context) throws SQLException, CommentNotFoundException {
+	private void deleteCommentOnPost(Context context) throws SQLException {
 		commentService.deleteCommentOnPost(context.pathParam("comment-id"));
 		context.status(HttpStatus.NO_CONTENT);
 	}

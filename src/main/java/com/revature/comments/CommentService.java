@@ -40,7 +40,7 @@ public class CommentService {
 		}
 	}
 
-	public Comment createCommentOnPost(String postId, Comment comment) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, UserIsDeletedException {
+	public Comment createCommentOnPost(String postId, Comment comment) throws SQLException {
 		if (comment.getAuthorId() == null) {
 			throw new UserNotFoundException("no user specified");
 		}
@@ -51,7 +51,7 @@ public class CommentService {
 		return commentDao.createCommentOnPost(postId, comment);
 	}
 
-	public Comment updateCommentOnPost(String commentId, Comment comment) throws UserNotFoundException, SQLException, UserIsDeletedException, CommentValidationException, CommentNotFoundException {
+	public Comment updateCommentOnPost(String commentId, Comment comment) throws SQLException {
 		if (comment.getAuthorId() == null) {
 			throw new UserNotFoundException("no user specified");
 		}
@@ -61,7 +61,7 @@ public class CommentService {
 		return commentDao.updateCommentOnPost(commentId, comment);
 	}
 
-	public void deleteCommentOnPost(String commentId) throws SQLException, CommentNotFoundException {
+	public void deleteCommentOnPost(String commentId) throws SQLException {
 		commentDao.deleteCommentOnPost(commentId);
 	}
 }

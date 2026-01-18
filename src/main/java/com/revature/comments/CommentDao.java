@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 public class CommentDao {
 	public Comment createCommentOnPost(String postId, Comment comment) throws SQLException {
+		// TODO: validate comment isn't empty
 		String CREATE_COMMENT_ON_POST_SQL = """
 				INSERT INTO comments (created_at, content, author_id, post_id)
 				VALUES (?, ?, ?, ?)
@@ -34,7 +35,7 @@ public class CommentDao {
 		}
 	}
 
-	public Comment updateCommentOnPost(String commentId, Comment comment) throws SQLException, CommentNotFoundException {
+	public Comment updateCommentOnPost(String commentId, Comment comment) throws SQLException {
 		String UPDATE_COMMENT_ON_POST_SQL = """
 				UPDATE comments SET
 				content = ?,
@@ -62,7 +63,7 @@ public class CommentDao {
 		}
 	}
 
-	public void deleteCommentOnPost(String commentId) throws CommentNotFoundException, SQLException {
+	public void deleteCommentOnPost(String commentId) throws SQLException {
 		String DELETE_COMMENT_ON_POST_SQL = """
 				DELETE FROM comments WHERE
 				id = ?
