@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS posts (
 	id SERIAL PRIMARY KEY,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP,
-	content VARCHAR,
+	content VARCHAR NOT NULL,
 	author_id INTEGER references users (id)
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS comments (
 	id SERIAL PRIMARY KEY,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP,
-	content VARCHAR,
+	content VARCHAR NOT NULL,
 	author_id INTEGER references users (id),
 	post_id INTEGER references posts (id)
 );
