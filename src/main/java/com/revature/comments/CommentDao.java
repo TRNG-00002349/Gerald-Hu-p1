@@ -61,4 +61,24 @@ public class CommentDao {
 			throw new CommentNotFoundException(commentId);
 		}
 	}
+
+	public void deleteCommentOnPost(String commentId) throws CommentNotFoundException, SQLException {
+		String DELETE_COMMENT_ON_POST_SQL = """
+				DELETE FROM comments WHERE
+				id = ?
+				""";
+		try (
+				var conn = DataSource.getConnection();
+				var pstmt = conn.prepareStatement(DELETE_COMMENT_ON_POST_SQL);
+				) {
+			pstmt.setInt(1, Integer.parseInt(commentId));
+			int updated = pstmt.executeUpdate();
+			if (updated == 0) {
+				throw new CommentNotFoundException(commentId);
+			}
+
+		} catch (NumberFormatException e) {
+			throw new CommentNotFoundException(commentId);
+		}
+	}
 }

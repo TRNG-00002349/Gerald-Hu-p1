@@ -60,4 +60,8 @@ public class CommentService {
 
 		return commentDao.updateCommentOnPost(commentId, comment);
 	}
+
+	public void deleteCommentOnPost(String commentId) throws SQLException, CommentNotFoundException {
+		commentDao.deleteCommentOnPost(commentId);
+	}
 }

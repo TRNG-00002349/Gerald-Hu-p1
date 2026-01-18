@@ -30,12 +30,18 @@ public class CommentController implements Controller {
 		server.post("/posts/{post-id}/comments", this::createCommentOnPost);
 		server.get("/posts/{post-id}/comments", PostController::getBlogPost);
 		server.put("/posts/{post-id}/comments/{comment-id}", this::updateCommentOnPost);
+		server.delete("/posts/{post-id}/comments/{comment-id}", this::deleteCommentOnPost);
 	}
 
 
 	@Override
 	public void registerExceptions(Javalin server) {
 		server.exception(CommentValidationException.class, this::handleInvalidCommentException);
+		server.exception(CommentNotFoundException.class, this::handleCommentNotFoundException);
+	}
+
+	private void handleCommentNotFoundException(CommentNotFoundException e, Context context) {
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Comment not found: %s", e.getMessage()));
 	}
 
 	private void createCommentOnPost(Context context) throws SQLException, PostNotFoundException, CommentValidationException, UserNotFoundException, BadRequestException, UserIsDeletedException {
@@ -52,6 +58,11 @@ public class CommentController implements Controller {
 				context.bodyAsClass(Comment.class)
 		);
 		context.status(HttpStatus.OK).json(c);
+	}
+
+	private void deleteCommentOnPost(Context context) throws SQLException, CommentNotFoundException {
+		commentService.deleteCommentOnPost(context.pathParam("comment-id"));
+		context.status(HttpStatus.NO_CONTENT);
 	}
 
 	private void handleInvalidCommentException(CommentValidationException e, Context context) {
