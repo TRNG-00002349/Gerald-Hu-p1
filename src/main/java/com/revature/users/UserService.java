@@ -68,7 +68,7 @@ public class UserService {
 		// TODO: additional validations (username has no underscores, no spaces, force lowercasing)
 	}
 
-	public User saveUser(UserAuthDTO user) throws BadRequestException, SQLException {
+	public User saveUser(UserAuthDTO user) throws SQLException {
 		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 
@@ -86,11 +86,11 @@ public class UserService {
 		return userDao.readAllUsers();
 	}
 
-	public User getUser(String id) throws SQLException, UserNotFoundException {
+	public User getUser(String id) throws SQLException {
 		return userDao.readUser(id);
 	}
 
-	public User updateUser(String id, UserAuthDTO user) throws SQLException, BadRequestException, UserNotFoundException {
+	public User updateUser(String id, UserAuthDTO user) throws SQLException {
 		byte[] salt = salt();
 		String hashedPassword = hashPassword(user.getPassword(), salt);
 		validateUser(user);
@@ -103,11 +103,11 @@ public class UserService {
 		return userDao.updateUser(id, u);
 	}
 
-	public void deleteUser(String id) throws SQLException, UserNotFoundException {
+	public void deleteUser(String id) throws SQLException {
 		userDao.deleteUser(id);
 	}
 
-	public List<Post> getUserPosts(String s) throws UserNotFoundException, SQLException {
+	public List<Post> getUserPosts(String s) throws SQLException {
 		return postDao.readPostsByUser(s);
 	}
 }

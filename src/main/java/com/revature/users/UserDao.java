@@ -63,7 +63,7 @@ public class UserDao {
 		}
 	}
 
-	public User readUser(String id) throws SQLException, UserNotFoundException {
+	public User readUser(String id) throws SQLException {
 		String READ_ONE_USER_SQL = """
 				SELECT * FROM users WHERE id = ?
 				AND deleted = FALSE
@@ -72,6 +72,7 @@ public class UserDao {
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(READ_ONE_USER_SQL);
 		)	{
+			// TODO: add UserIsDeleted check
 			pstmt.setInt(1, Integer.parseInt(id));
 			pstmt.executeQuery();
 			ResultSet rs = pstmt.getResultSet();
@@ -86,11 +87,14 @@ public class UserDao {
 			u.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
 			return u;
 		} catch (NumberFormatException e) {
+			// TODO: catch NumberFormatException in the service layer, not here.
+			// Or just have a generic checker for "not a number".
 			throw new UserNotFoundException(id);
+			// throw new NumberFormatException(id);
 		}
 	}
 
-	public User updateUser(String id, User user) throws SQLException, UserNotFoundException {
+	public User updateUser(String id, User user) throws SQLException {
 		String UPDATE_USER_SQL = """
 				UPDATE USERS
 				SET username = ?,
@@ -98,6 +102,7 @@ public class UserDao {
 				WHERE id = ?
 				AND deleted = FALSE
 				""";
+		// TODO: add UserIsDeleted check, tell client we can't update deleted users
 		try(
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(UPDATE_USER_SQL);
@@ -117,7 +122,7 @@ public class UserDao {
 		}
 	}
 
-	public void deleteUser(String id) throws SQLException, UserNotFoundException {
+	public void deleteUser(String id) throws SQLException {
 		String DELETE_ONE_USER_SQL = """
 				UPDATE USERS
 				set DELETED = TRUE
@@ -132,8 +137,6 @@ public class UserDao {
 			if (deleted.equals(0)) {
 				throw new UserNotFoundException(id);
 			}
-		} catch (NumberFormatException e) {
-			throw new UserNotFoundException(id);
 		}
 	}
 }

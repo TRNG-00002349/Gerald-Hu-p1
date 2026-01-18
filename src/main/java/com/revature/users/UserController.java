@@ -39,7 +39,7 @@ public class UserController implements Controller {
 		server.exception(UserIsDeletedException.class, this::handleUserIsDeletedException);
 	}
 
-	public void registerUser(Context context) throws SQLException, BadRequestException {
+	public void registerUser(Context context) throws SQLException {
 		UserAuthDTO user;
 		try {
 			user = context.bodyAsClass(UserAuthDTO.class);
@@ -62,7 +62,7 @@ public class UserController implements Controller {
 		context.json(users);
 	}
 
-	public void showOneUser(Context context) throws SQLException, UserNotFoundException {
+	public void showOneUser(Context context) throws SQLException {
 		User user = userService.getUser(context.pathParam("user-id"));
 		context.status(HttpStatus.OK);
 		context.json(user);
@@ -71,7 +71,7 @@ public class UserController implements Controller {
 
 	// get user by username
 
-	public void showOneUsersPosts(Context context) throws UserNotFoundException, SQLException {
+	public void showOneUsersPosts(Context context) throws SQLException {
 		User user = userService.getUser(context.pathParam("user-id"));
 		List<Post> userPosts = userService.getUserPosts(context.pathParam("user-id"));
 		user.setUserPosts(userPosts);
@@ -80,7 +80,7 @@ public class UserController implements Controller {
 	}
 
 	// We allow changing username, password, email; these implicitly change updated_at
-	public void updateUser(Context context) throws SQLException, BadRequestException, UserNotFoundException {
+	public void updateUser(Context context) throws SQLException {
 		UserAuthDTO user;
 		try {
 			user = context.bodyAsClass(UserAuthDTO.class);
@@ -89,11 +89,10 @@ public class UserController implements Controller {
 		}
 
 		User persistedUser = userService.updateUser(context.pathParam("user-id"), user);
-		context.status(HttpStatus.OK);
-		context.json(persistedUser);
+		context.status(HttpStatus.OK).json(persistedUser);
 	}
 
-	public void deleteUser(Context context) throws SQLException, UserNotFoundException {
+	public void deleteUser(Context context) throws SQLException {
 		userService.deleteUser(context.pathParam("user-id"));
 		context.status(HttpStatus.NO_CONTENT);
 	}
