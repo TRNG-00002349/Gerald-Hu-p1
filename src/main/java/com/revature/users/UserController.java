@@ -36,7 +36,6 @@ public class UserController implements Controller {
 	public void registerExceptions(Javalin server) {
 		server.exception(UserNotFoundException.class, this::handleUserNotFoundException);
 		server.exception(UserValidationException.class, this::handleUserValidationException);
-		server.exception(UserIsDeletedException.class, this::handleUserIsDeletedException);
 	}
 
 	public void validateUserId(Context context) {

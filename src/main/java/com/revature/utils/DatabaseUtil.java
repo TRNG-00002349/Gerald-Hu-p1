@@ -1,12 +1,7 @@
 package com.revature.utils;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.revature.users.UserIsDeletedException;
-import com.revature.users.UserNotFoundException;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.stream.Collectors;
@@ -35,34 +30,4 @@ public class DatabaseUtil {
 			}
 		}
 	}
-
-
-	public static void checkIfAuthorDeleted(Integer authorId) throws SQLException {
-		String CHECK_IF_AUTHOR_DELETED = """
-				SELECT deleted FROM users
-				WHERE
-				ID = ?
-				""";
-		try(
-				var conn = DataSource.getConnection();
-				var checkAuthor = conn.prepareStatement(CHECK_IF_AUTHOR_DELETED);
-		) {
-
-			if (authorId == null) {
-				throw new UserNotFoundException("No user specified");
-			}
-			ResultSet rs;
-			checkAuthor.setInt(1, authorId);
-			checkAuthor.executeQuery();
-			rs = checkAuthor.getResultSet();
-			if (!rs.isBeforeFirst()) {
-				throw new UserNotFoundException(authorId.toString());
-			}
-			rs.next();
-			if (rs.getBoolean("deleted")) {
-				throw new UserIsDeletedException(authorId.toString());
-			}
-		}
-	}
-
 }

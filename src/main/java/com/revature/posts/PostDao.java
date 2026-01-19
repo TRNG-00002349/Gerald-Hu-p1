@@ -41,7 +41,6 @@ public class PostDao {
 				INSERT INTO posts (content, author_id)
 				VALUES (?, ?)
 				""";
-		DatabaseUtil.checkIfAuthorDeleted(post.getAuthorId());
 
 		try (
 				var conn = DataSource.getConnection();
@@ -119,7 +118,6 @@ public class PostDao {
 
 		Integer authorId = getPostAuthorId(Integer.parseInt(postId));
 		// System.out.println(String.format("we should see an author ID here: %s", authorId));
-		DatabaseUtil.checkIfAuthorDeleted(authorId);
 
 		try (
 				var conn = DataSource.getConnection();
