@@ -63,7 +63,7 @@ public class UserDao {
 		}
 	}
 
-	public User readUser(String id) throws SQLException {
+	public User readUser(String userId) throws SQLException {
 		String READ_ONE_USER_SQL = """
 				SELECT * FROM users WHERE id = ?
 				AND deleted = FALSE
@@ -72,11 +72,11 @@ public class UserDao {
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(READ_ONE_USER_SQL);
 		)	{
-			pstmt.setInt(1, Integer.parseInt(id));
+			pstmt.setInt(1, Integer.parseInt(userId));
 			pstmt.executeQuery();
 			ResultSet rs = pstmt.getResultSet();
 			if (!rs.isBeforeFirst()) {
-				throw new UserNotFoundException(id);
+				throw new UserNotFoundException(userId);
 			}
 			rs.next();
 			User u = new User();
@@ -88,7 +88,7 @@ public class UserDao {
 		}
 	}
 
-	public User updateUser(String id, User user) throws SQLException {
+	public User updateUser(String userId, User user) throws SQLException {
 		String UPDATE_USER_SQL = """
 				UPDATE USERS
 				SET username = ?,
@@ -102,18 +102,18 @@ public class UserDao {
 		) {
 			pstmt.setString(1, user.getUsername());
 			pstmt.setObject(2, LocalDateTime.now());
-			pstmt.setInt(3, Integer.parseInt(id));
+			pstmt.setInt(3, Integer.parseInt(userId));
 			Integer updated = pstmt.executeUpdate();
 			if (updated.equals(0)) {
-				throw new UserNotFoundException(id);
+				throw new UserNotFoundException(userId);
 			}
-			user.setId(Integer.parseInt(id));
+			user.setId(Integer.parseInt(userId));
 			user.setUpdatedAt(LocalDateTime.now());
 			return user;
 		}
 	}
 
-	public void deleteUser(String id) throws SQLException {
+	public void deleteUser(String userId) throws SQLException {
 		String DELETE_ONE_USER_SQL = """
 				UPDATE USERS
 				set DELETED = TRUE
@@ -123,10 +123,10 @@ public class UserDao {
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(DELETE_ONE_USER_SQL);
 		) {
-			pstmt.setInt(1, Integer.parseInt(id));
+			pstmt.setInt(1, Integer.parseInt(userId));
 			Integer deleted = pstmt.executeUpdate();
 			if (deleted.equals(0)) {
-				throw new UserNotFoundException(id);
+				throw new UserNotFoundException(userId);
 			}
 		}
 	}

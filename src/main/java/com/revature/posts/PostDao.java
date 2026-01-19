@@ -1,9 +1,7 @@
 package com.revature.posts;
 
 import com.revature.comments.Comment;
-import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
-import com.revature.utils.DatabaseUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +12,7 @@ import java.util.List;
 
 public class PostDao {
 
-	private Integer getPostAuthorId(Integer postId) throws SQLException {
+	private Integer getPostAuthorId(String postId) throws SQLException {
 		String GET_AUTHOR_ID = """
 				SELECT author_id FROM posts
 				WHERE
@@ -25,11 +23,11 @@ public class PostDao {
 				var checkPost = conn.prepareStatement(GET_AUTHOR_ID);
 		) {
 			ResultSet rs;
-			checkPost.setInt(1, postId);
+			checkPost.setInt(1, Integer.parseInt(postId));
 			checkPost.executeQuery();
 			rs = checkPost.getResultSet();
 			if (!rs.isBeforeFirst()) {
-				throw new PostNotFoundException(postId.toString());
+				throw new PostNotFoundException(postId);
 			}
 			rs.next();
 			return rs.getInt("author_id");
@@ -116,8 +114,7 @@ public class PostDao {
 				id = ?
 				""";
 
-		Integer authorId = getPostAuthorId(Integer.parseInt(postId));
-		// System.out.println(String.format("we should see an author ID here: %s", authorId));
+		Integer authorId = getPostAuthorId(postId);
 
 		try (
 				var conn = DataSource.getConnection();
@@ -138,7 +135,6 @@ public class PostDao {
 	}
 
 	public void deletePost(String postId) throws SQLException {
-		// TODO: some functions take string ID and some take int ID. fix for consistency. I guess.
 		// TODO: When deleting a post, cascade delete comments
 		String DELETE_POST_SQL = """
 				DELETE FROM posts WHERE id = ?
@@ -158,7 +154,7 @@ public class PostDao {
 	public List<Post> readPostsByUser(String authorId) throws SQLException {
 		String READ_POSTS_BY_USER_SQL = """
 				SELECT * FROM posts
-				WHERE 
+				WHERE
 				author_id = ?
 				""";
 		LinkedList<Post> postList = new LinkedList<>();
@@ -180,7 +176,6 @@ public class PostDao {
 				postList.add(p);
 			}
 			return postList;
-
 		}
 	}
 }

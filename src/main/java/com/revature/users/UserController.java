@@ -50,10 +50,7 @@ public class UserController implements Controller {
 		User persistedUser = userService.createUser(user);
 
 		// Prep the response
-		context.status(HttpStatus.CREATED);
-		context.json(persistedUser);
-		// TODO: write tests for empty body, body of {}, malformed body, proper body
-
+		context.status(HttpStatus.CREATED).json(persistedUser);
 	}
 
 	public void showAllUsers(Context context) throws SQLException {
@@ -66,7 +63,6 @@ public class UserController implements Controller {
 		User user = userService.getUser(context.pathParam("user-id"));
 		context.status(HttpStatus.OK);
 		context.json(user);
-		// TODO: Write tests for: valid user id, stringy user ID, invalid user ID
 	}
 
 	// get user by username
