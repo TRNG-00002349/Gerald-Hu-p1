@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS posts (
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP,
 	content VARCHAR NOT NULL,
-	author_id INTEGER references users (id)
+	author_id INTEGER REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS comments (
@@ -22,8 +22,10 @@ CREATE TABLE IF NOT EXISTS comments (
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP,
 	content VARCHAR NOT NULL,
-	author_id INTEGER references users (id),
-	post_id INTEGER references posts (id)
+	author_id INTEGER REFERENCES users (id),
+	post_id INTEGER
+		REFERENCES posts (id)
+		ON DELETE CASCADE
 );
 
 

@@ -135,7 +135,6 @@ public class PostDao {
 	}
 
 	public void deletePost(String postId) throws SQLException {
-		// TODO: When deleting a post, cascade delete comments
 		String DELETE_POST_SQL = """
 				DELETE FROM posts WHERE id = ?
 				""";
