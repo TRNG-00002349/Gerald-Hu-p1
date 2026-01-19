@@ -2,6 +2,8 @@ package com.revature.comments;
 
 import com.revature.posts.PostController;
 import com.revature.utils.Controller;
+import com.revature.utils.ControllerUtil;
+import com.revature.utils.ServiceUtil;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -22,8 +24,10 @@ public class CommentController implements Controller {
 
 		server.post("/posts/{post-id}/comments", this::createCommentOnPost);
 		server.get("/posts/{post-id}/comments", PostController::getBlogPost);
+		// server.get("/posts/{post-id}/comments/{comment-id}", PostController::getBlogPostComment); // TODO: implement
 		server.put("/posts/{post-id}/comments/{comment-id}", this::updateCommentOnPost);
 		server.delete("/posts/{post-id}/comments/{comment-id}", this::deleteCommentOnPost);
+		server.before("/posts/{post-id}/comments/{comment-id}*", this::validatePostAndCommentId);
 	}
 
 
@@ -31,6 +35,13 @@ public class CommentController implements Controller {
 	public void registerExceptions(Javalin server) {
 		server.exception(CommentValidationException.class, this::handleInvalidCommentException);
 		server.exception(CommentNotFoundException.class, this::handleCommentNotFoundException);
+	}
+
+	public void validatePostAndCommentId(Context context) {
+		String postId = context.pathParam("post-id");
+		ServiceUtil.validateId(postId);
+		String commentId = context.pathParam("comment-id");
+		ServiceUtil.validateId(commentId);
 	}
 
 	private void handleCommentNotFoundException(CommentNotFoundException e, Context context) {

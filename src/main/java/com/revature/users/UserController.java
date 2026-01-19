@@ -3,6 +3,8 @@ package com.revature.users;
 import com.revature.posts.Post;
 import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
+import com.revature.utils.ControllerUtil;
+import com.revature.utils.ServiceUtil;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -42,15 +44,7 @@ public class UserController implements Controller {
 
 	public void validateUserId(Context context) {
 		String userId = context.pathParam("user-id");
-		try {
-			Integer a = Integer.parseInt(userId);
-			if (a < 1) {
-				throw new NumberFormatException();
-			}
-		} catch (NumberFormatException e) {
-			// Rethrow with modified message
-			throw new NumberFormatException(userId);
-		}
+		ServiceUtil.validateId(userId);
 	}
 
 	public void registerUser(Context context) throws SQLException {

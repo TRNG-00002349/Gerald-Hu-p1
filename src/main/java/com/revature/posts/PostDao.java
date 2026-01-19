@@ -105,8 +105,6 @@ public class PostDao {
 				commentList.add(c);
 			}
 			return p;
-		} catch (NumberFormatException e) {
-			throw new PostNotFoundException(postId);
 		}
 	}
 
@@ -138,9 +136,6 @@ public class PostDao {
 			post.setId(Integer.parseInt(postId));
 			post.setAuthorId(authorId);
 			return post;
-		} catch (NumberFormatException e) {
-			// TODO: refactor so NumberFormatException is caught and returned at the controller level.
-			throw new PostNotFoundException(post.getId().toString());
 		}
 	}
 
@@ -159,8 +154,6 @@ public class PostDao {
 			if (deleted.equals(0)) {
 				throw new PostNotFoundException(postId);
 			}
-		} catch (NumberFormatException e) {
-			throw new PostNotFoundException(postId);
 		}
 	}
 
@@ -190,8 +183,6 @@ public class PostDao {
 			}
 			return postList;
 
-		} catch (NumberFormatException e) {
-			throw new UserNotFoundException(authorId);
 		}
 	}
 }

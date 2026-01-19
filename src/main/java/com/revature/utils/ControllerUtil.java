@@ -9,6 +9,7 @@ import io.javalin.http.HttpStatus;
 import java.sql.SQLException;
 
 public class ControllerUtil {
+
 	public static void handleDBException(SQLException e, Context ctx) {
 		if (e.getSQLState().equals("23505")) {
 			ctx.status(HttpStatus.BAD_REQUEST).result("Duplicate username or email already exists");
@@ -34,7 +35,7 @@ public class ControllerUtil {
 	}
 
 	public static void handleInvalidFormatException(InvalidFormatException e, Context context) {
-		context.status(HttpStatus.BAD_REQUEST).result(String.format("Invalid format: %s", context.body()));
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Couldn't parse request body: %s", context.body()));
 		e.printStackTrace();
 	}
 

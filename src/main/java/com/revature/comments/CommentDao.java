@@ -56,8 +56,6 @@ public class CommentDao {
 			comment.setId(Integer.parseInt(commentId));
 			comment.setUpdatedAt(now);
 			return comment;
-		} catch (NumberFormatException e) {
-			throw new CommentNotFoundException(commentId);
 		}
 	}
 
@@ -76,8 +74,6 @@ public class CommentDao {
 				throw new CommentNotFoundException(commentId);
 			}
 
-		} catch (NumberFormatException e) {
-			throw new CommentNotFoundException(commentId);
 		}
 	}
 }
