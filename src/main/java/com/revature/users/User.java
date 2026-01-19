@@ -15,8 +15,6 @@ public class User {
 	private String email;
 	@JsonIgnore
 	private String hashedPassword;
-	@JsonIgnore
-	private String salt;
 	// Note: Could use private UserAuthDTO instead, using composition.
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,14 +30,6 @@ public class User {
 
 	public User() {
 
-	}
-
-	public User(Integer id, String username, String hashedPassword, String email, String salt) {
-		this.id = id;
-		this.username = username;
-		this.hashedPassword = hashedPassword;
-		this.email = email;
-		this.salt = salt;
 	}
 
 	public Integer getId() {
@@ -72,14 +62,6 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
 	}
 
 	public LocalDateTime getUpdatedAt() {

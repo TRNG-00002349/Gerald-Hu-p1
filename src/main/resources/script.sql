@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS users (
 	username VARCHAR(255) UNIQUE NOT NULL,
 	email VARCHAR(255) UNIQUE NOT NULL,
 	hashed_password VARCHAR(255) NOT NULL,
-	salt VARCHAR(255) NOT NULL,
 	deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
@@ -34,11 +33,11 @@ ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE posts_id_seq RESTART WITH 1;
 ALTER SEQUENCE comments_id_seq RESTART WITH 1;
 
-INSERT INTO users (username, email, hashed_password, salt)
-VALUES ('test-user', 'test@example.com', 'not actually hashed', 'mmm salt');
+INSERT INTO users (username, email, hashed_password)
+VALUES ('test-user', 'test@example.com', 'not actually hashed');
 
-INSERT INTO users (username, email, hashed_password, salt, deleted)
-VALUES ('test-user-deleted', 'deleted@example.com', 'not hashed', 'salt', TRUE);
+INSERT INTO users (username, email, hashed_password, deleted)
+VALUES ('test-user-deleted', 'deleted@example.com', 'not hashed', TRUE);
 
 INSERT INTO posts (content, author_id)
 VALUES ('test post please ignore', 1);

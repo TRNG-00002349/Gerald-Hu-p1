@@ -3,13 +3,8 @@ package com.revature.users;
 import com.revature.posts.Post;
 import com.revature.posts.PostDao;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.mindrot.jbcrypt.BCrypt;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -35,25 +30,6 @@ public class UserService {
 		return this;
 	}
 
-	private static byte[] salt() {
-		SecureRandom random = new SecureRandom();
-		byte[] salt = new byte[16];
-		random.nextBytes(salt);
-		return salt;
-	}
-
-	// TODO: update this to use bcrypt instead. jesus
-	private static String hashPassword(String password, byte[] salt) {
-		try {
-			KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-			return new String(factory.generateSecret(spec).getEncoded());
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NullPointerException e) {
-			e.printStackTrace();
-			throw new UserValidationException("Couldn't accept password");
-		}
-	}
-
 	private void validateUserInfo(UserAuthDTO user) {
 		if (user.getUsername() == null) {
 			throw new UserValidationException("No username provided");
@@ -64,22 +40,20 @@ public class UserService {
 		if (!EmailValidator.getInstance().isValid(user.getEmail())) {
 			throw new UserValidationException(String.format("Invalid email: %s", user.getEmail()));
 		}
-		// TODO: additional validations (username has no underscores, no spaces, force lowercasing)
+		if (user.getPassword() == null || user.getPassword().isEmpty()) {
+			throw new UserValidationException("Password can't be empty!");
+		}
+		// future work: additional validations (username has no underscores, no spaces, force lowercasing)
 	}
 
-	// TODO: validate password can't be empty
-
 	public User createUser(UserAuthDTO user) throws SQLException {
-		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt
-		String hashedPassword = hashPassword(user.getPassword(), salt);
-
 		validateUserInfo(user);
+		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(16));
 
 		User u = new User();
 		u.setHashedPassword(hashedPassword);
 		u.setUsername(user.getUsername());
 		u.setEmail(user.getEmail());
-		u.setSalt(new String(salt));
 		return userDao.createUser(u);
 	}
 
@@ -92,15 +66,13 @@ public class UserService {
 	}
 
 	public User updateUser(String id, UserAuthDTO user) throws SQLException {
-		byte[] salt = salt();
-		String hashedPassword = hashPassword(user.getPassword(), salt);
 		validateUserInfo(user);
+		String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(16));
 
 		User u = new User();
 		u.setUsername(user.getUsername());
 		u.setEmail(user.getEmail());
 		u.setHashedPassword(hashedPassword);
-		u.setSalt(new String(salt));
 		return userDao.updateUser(id, u);
 	}
 
@@ -109,6 +81,6 @@ public class UserService {
 	}
 
 	public List<Post> getUserPosts(String s) throws SQLException {
-		return postDao.readPostsByUser(s);
+		return PostDao.readPostsByUser(s);
 	}
 }

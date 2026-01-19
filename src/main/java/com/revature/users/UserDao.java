@@ -16,8 +16,8 @@ public class UserDao {
 
 	public User createUser(User user) throws SQLException {
 		String CREATE_USER_SQL = """
-				INSERT INTO users (username, email, hashed_password, salt, created_at)
-				VALUES (?, ?, ?, ?, ?)
+				INSERT INTO users (username, email, hashed_password, created_at)
+				VALUES (?, ?, ?, ?)
 				""";
 		try (
 				var conn = DataSource.getConnection();
@@ -27,8 +27,7 @@ public class UserDao {
 			pstmt.setString(1, user.getUsername());
 			pstmt.setString(2, user.getEmail());
 			pstmt.setString(3, user.getHashedPassword());
-			pstmt.setString(4, user.getSalt());
-			pstmt.setObject(5, now);
+			pstmt.setObject(4, now);
 			pstmt.executeUpdate();
 
 			ResultSet rs = pstmt.getGeneratedKeys();
@@ -96,6 +95,8 @@ public class UserDao {
 		String UPDATE_USER_SQL = """
 				UPDATE USERS
 				SET username = ?,
+				email = ?,
+				hashed_password = ?,
 				updated_at = ?
 				WHERE id = ?
 				AND deleted = FALSE
@@ -105,8 +106,10 @@ public class UserDao {
 				var pstmt = conn.prepareStatement(UPDATE_USER_SQL);
 		) {
 			pstmt.setString(1, user.getUsername());
-			pstmt.setObject(2, LocalDateTime.now());
-			pstmt.setInt(3, Integer.parseInt(userId));
+			pstmt.setString(2, user.getEmail());
+			pstmt.setString(3, user.getHashedPassword());
+			pstmt.setObject(4, LocalDateTime.now());
+			pstmt.setInt(5, Integer.parseInt(userId));
 			Integer updated = pstmt.executeUpdate();
 			if (updated.equals(0)) {
 				throw new UserNotFoundException(userId);
