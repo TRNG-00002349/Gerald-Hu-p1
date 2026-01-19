@@ -24,7 +24,7 @@ public class CommentController implements Controller {
 
 		server.post("/posts/{post-id}/comments", this::createCommentOnPost);
 		server.get("/posts/{post-id}/comments", PostController::getBlogPost);
-		// server.get("/posts/{post-id}/comments/{comment-id}", PostController::getBlogPostComment); // TODO: implement
+		server.get("/posts/{post-id}/comments/{comment-id}", this::getCommentOnPost);
 		server.put("/posts/{post-id}/comments/{comment-id}", this::updateCommentOnPost);
 		server.delete("/posts/{post-id}/comments/{comment-id}", this::deleteCommentOnPost);
 		server.before("/posts/{post-id}/comments/{comment-id}*", this::validatePostAndCommentId);
@@ -54,6 +54,14 @@ public class CommentController implements Controller {
 				context.bodyAsClass(Comment.class)
 		);
 		context.status(HttpStatus.CREATED).json(c);
+	}
+
+	private void getCommentOnPost(Context context) throws SQLException {
+		Comment c = commentService.getCommentOnPost(
+				context.pathParam("comment-id"),
+				context.bodyAsClass(Comment.class)
+		);
+		context.status(HttpStatus.OK).json(c);
 	}
 
 	private void updateCommentOnPost(Context context) throws SQLException {

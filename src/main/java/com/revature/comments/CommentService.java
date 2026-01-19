@@ -48,6 +48,10 @@ public class CommentService {
 		return commentDao.createCommentOnPost(postId, comment);
 	}
 
+	public Comment getCommentOnPost(String commentId, Comment comment) throws SQLException {
+		return commentDao.readCommentOnPost(commentId);
+	}
+
 	public Comment updateCommentOnPost(String commentId, Comment comment) throws SQLException {
 		if (comment.getAuthorId() == null) {
 			throw new UserNotFoundException("no user specified");
@@ -60,4 +64,5 @@ public class CommentService {
 	public void deleteCommentOnPost(String commentId) throws SQLException {
 		commentDao.deleteCommentOnPost(commentId);
 	}
+
 }

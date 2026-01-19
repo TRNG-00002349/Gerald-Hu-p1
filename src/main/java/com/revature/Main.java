@@ -34,6 +34,8 @@ public class Main {
 	// TODO: Test suite. empty body, body of {}, malformed body, proper body
 	// valid user id, stringy user ID, invalid user ID. (Same for post IDs, comment IDs, etc.)
 
+	// TODO: likes feature.
+
 	public static void main(String[] args) {
 		System.out.println("Hello world!");
 
