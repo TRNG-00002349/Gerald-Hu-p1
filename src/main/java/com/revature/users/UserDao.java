@@ -1,10 +1,10 @@
 package com.revature.users;
 
+import com.revature.posts.Post;
+import com.revature.posts.PostDao;
 import com.revature.utils.DataSource;
 
 import java.sql.*;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +84,8 @@ public class UserDao {
 			u.setUsername(rs.getString("username"));
 			u.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
 			u.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+			List<Post> listOfUserPosts = PostDao.readPostsByUser(userId);
+			u.setUserPosts(listOfUserPosts);
 			return u;
 		}
 	}
