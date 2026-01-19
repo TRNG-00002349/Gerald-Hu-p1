@@ -1,5 +1,6 @@
 package com.revature.posts;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.revature.comments.Comment;
 
 import java.time.LocalDateTime;
@@ -10,9 +11,12 @@ public class Post {
 	private String content;
 	private Integer authorId;
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime createdAt;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime updatedAt;
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Comment> commentList;
 
 	public Post() {

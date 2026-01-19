@@ -1,17 +1,21 @@
 package com.revature.comments;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
 public class Comment {
 	private Integer id;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
 	private String content;
 	private Integer authorId;
 	@JsonIgnore
 	private Integer postId;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private LocalDateTime createdAt;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private LocalDateTime updatedAt;
 
 	public Comment() {
 
