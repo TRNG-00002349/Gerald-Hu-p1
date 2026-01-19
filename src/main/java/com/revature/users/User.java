@@ -1,15 +1,17 @@
 package com.revature.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.revature.posts.Post;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class User {
 	private Integer id;
 	private String username;
+
+	@JsonIgnore
 	private String email;
 	@JsonIgnore
 	private String hashedPassword;
@@ -17,11 +19,15 @@ public class User {
 	private String salt;
 	// Note: Could use private UserAuthDTO instead, using composition.
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime createdAt;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private LocalDateTime updatedAt;
 
+	@JsonIgnore
 	private Boolean deleted;
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Post> userPosts;
 
 	public User() {

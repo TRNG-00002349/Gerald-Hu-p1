@@ -57,6 +57,8 @@ public class UserDao {
 			}
 			while (rs.next()) {
 				UserInfoDTO u = new UserInfoDTO(rs.getString("username"), rs.getInt("id"));
+				u.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+				u.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
 				userList.add(u);
 			}
 			return userList;

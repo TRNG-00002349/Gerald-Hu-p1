@@ -151,7 +151,7 @@ public class PostDao {
 		}
 	}
 
-	public List<Post> readPostsByUser(String authorId) throws SQLException {
+	public static List<Post> readPostsByUser(String authorId) throws SQLException {
 		String READ_POSTS_BY_USER_SQL = """
 				SELECT * FROM posts
 				WHERE
