@@ -31,9 +31,6 @@ public class Main {
 	     - User creation is exempt
 	 */
 
-
-	// TODO: client doesn't need to know createdAt or updatedAt, and I don't like setting it.
-
 	// TODO: Test suite. empty body, body of {}, malformed body, proper body
 	// valid user id, stringy user ID, invalid user ID. (Same for post IDs, comment IDs, etc.)
 
