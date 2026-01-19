@@ -2,7 +2,6 @@ package com.revature.users;
 
 import com.revature.posts.Post;
 import com.revature.posts.PostDao;
-import com.revature.utils.BadRequestException;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import javax.crypto.SecretKeyFactory;
@@ -51,7 +50,7 @@ public class UserService {
 			return new String(factory.generateSecret(spec).getEncoded());
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException | NullPointerException e) {
 			e.printStackTrace();
-			throw new BadRequestException("Couldn't accept password");
+			throw new UserValidationException("Couldn't accept password");
 		}
 	}
 
@@ -67,6 +66,8 @@ public class UserService {
 		}
 		// TODO: additional validations (username has no underscores, no spaces, force lowercasing)
 	}
+
+	// TODO: validate password can't be empty
 
 	public User createUser(UserAuthDTO user) throws SQLException {
 		byte[] salt = salt(); // We must reroll salt every time, else we get null bytes in salt

@@ -1,8 +1,6 @@
 package com.revature.posts;
 
-import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
-import com.revature.utils.ControllerUtil;
 import com.revature.utils.ServiceUtil;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -39,14 +37,7 @@ public class PostController implements Controller {
 	}
 
 	public void createNewBlogPost(Context context) throws SQLException {
-		Post post;
-		try {
-			post = context.bodyAsClass(Post.class);
-		} catch (Exception e) {
-			// TODO: see if this can be trimmed down too, using InvalidFormatException to pivot
-			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
-		}
-
+		Post post = context.bodyAsClass(Post.class);
 		Post persistedPost = postService.saveNewPost(post);
 		context.status(HttpStatus.CREATED).json(persistedPost);
 	}
@@ -57,12 +48,7 @@ public class PostController implements Controller {
 	}
 
 	public void updateBlogPost(Context context) throws SQLException {
-		Post p;
-		try {
-			p = context.bodyAsClass(Post.class);
-		} catch (Exception e) {
-			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
-		}
+		Post p = context.bodyAsClass(Post.class);
 		Post post = postService.updatePost(context.pathParam("post-id"), p);
 		context.status(HttpStatus.OK).json(post);
 	}

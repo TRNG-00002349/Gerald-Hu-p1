@@ -1,14 +1,11 @@
 package com.revature.users;
 
 import com.revature.posts.Post;
-import com.revature.utils.BadRequestException;
 import com.revature.utils.Controller;
-import com.revature.utils.ControllerUtil;
 import com.revature.utils.ServiceUtil;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
-import org.eclipse.jetty.http.HttpMethod;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -48,12 +45,7 @@ public class UserController implements Controller {
 	}
 
 	public void registerUser(Context context) throws SQLException {
-		UserAuthDTO user;
-		try {
-			user = context.bodyAsClass(UserAuthDTO.class);
-		} catch (Exception e) {
-			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
-		}
+		UserAuthDTO user = context.bodyAsClass(UserAuthDTO.class);
 
 		// Send user to service layer (and then to DAO layer); get result back
 		User persistedUser = userService.createUser(user);
@@ -62,6 +54,7 @@ public class UserController implements Controller {
 		context.status(HttpStatus.CREATED);
 		context.json(persistedUser);
 		// TODO: write tests for empty body, body of {}, malformed body, proper body
+
 	}
 
 	public void showAllUsers(Context context) throws SQLException {
@@ -89,13 +82,7 @@ public class UserController implements Controller {
 
 	// We allow changing username, password, email; these implicitly change updated_at
 	public void updateUser(Context context) throws SQLException {
-		UserAuthDTO user;
-		try {
-			user = context.bodyAsClass(UserAuthDTO.class);
-		} catch (Exception e) {
-			throw new BadRequestException(String.format("Couldn't parse %s", context.body()));
-		}
-
+		UserAuthDTO user = context.bodyAsClass(UserAuthDTO.class);
 		User persistedUser = userService.updateUser(context.pathParam("user-id"), user);
 		context.status(HttpStatus.OK).json(persistedUser);
 	}

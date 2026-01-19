@@ -19,11 +19,6 @@ public class ControllerUtil {
 		}
 	}
 
-	public static void handleBadRequestException(BadRequestException e, Context context) {
-		context.status(HttpStatus.BAD_REQUEST).result(String.format("Bad input to %s: %s", context.path(), e.getMessage()));
-		e.printStackTrace();
-	}
-
 	public static void handleUnrecognizedPropertyException(UnrecognizedPropertyException e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result("Unrecognized fields in request body");
 		e.printStackTrace();

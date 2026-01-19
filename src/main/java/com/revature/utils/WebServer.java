@@ -27,7 +27,6 @@ public class WebServer {
 		}
 
 		server.exception(SQLException.class, ControllerUtil::handleDBException);
-		server.exception(BadRequestException.class, ControllerUtil::handleBadRequestException);
 		server.exception(UnrecognizedPropertyException.class, ControllerUtil::handleUnrecognizedPropertyException);
 		server.exception(JsonParseException.class, ControllerUtil::handleJsonParseException);
 		server.exception(InvalidFormatException.class, ControllerUtil::handleInvalidFormatException);

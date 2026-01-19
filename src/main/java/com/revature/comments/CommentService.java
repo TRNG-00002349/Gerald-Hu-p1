@@ -6,7 +6,6 @@ import com.revature.users.User;
 import com.revature.users.UserDao;
 import com.revature.users.UserIsDeletedException;
 import com.revature.users.UserNotFoundException;
-import com.revature.utils.BadRequestException;
 import com.revature.utils.DatabaseUtil;
 
 import java.sql.SQLException;
