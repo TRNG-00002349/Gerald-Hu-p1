@@ -1,7 +1,5 @@
 package com.revature.utils;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -24,12 +22,7 @@ public class ControllerUtil {
 		e.printStackTrace();
 	}
 
-	public static void handleJsonParseException(JsonParseException e, Context context) {
-		context.status(HttpStatus.BAD_REQUEST).result(String.format("Couldn't parse request body: %s", context.body()));
-		e.printStackTrace();
-	}
-
-	public static void handleInvalidFormatException(InvalidFormatException e, Context context) {
+	public static void handleParseException(Exception e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("Couldn't parse request body: %s", context.body()));
 		e.printStackTrace();
 	}

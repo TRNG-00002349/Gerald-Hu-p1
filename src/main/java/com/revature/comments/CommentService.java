@@ -13,7 +13,6 @@ public class CommentService {
 
 	private PostDao postDao;
 	private CommentDao commentDao;
-	private UserDao userDao;
 
 	public CommentService() {	}
 
@@ -24,11 +23,6 @@ public class CommentService {
 
 	public CommentService setPostDao(PostDao postDao) {
 		this.postDao = postDao;
-		return this;
-	}
-
-	public CommentService setUserDao(UserDao userDao) {
-		this.userDao = userDao;
 		return this;
 	}
 
