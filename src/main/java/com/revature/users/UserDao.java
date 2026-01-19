@@ -85,11 +85,6 @@ public class UserDao {
 			u.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
 			u.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
 			return u;
-		} catch (NumberFormatException e) {
-			// TODO: catch NumberFormatException in the service layer, not here.
-			// Or just have a generic checker for "not a number".
-			throw new UserNotFoundException(id);
-			// throw new NumberFormatException(id);
 		}
 	}
 
@@ -115,8 +110,6 @@ public class UserDao {
 			user.setId(Integer.parseInt(id));
 			user.setUpdatedAt(LocalDateTime.now());
 			return user;
-		} catch (NumberFormatException e) {
-			throw new UserNotFoundException(id);
 		}
 	}
 

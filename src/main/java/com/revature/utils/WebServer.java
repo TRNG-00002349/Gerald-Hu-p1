@@ -31,6 +31,7 @@ public class WebServer {
 		server.exception(UnrecognizedPropertyException.class, ControllerUtil::handleUnrecognizedPropertyException);
 		server.exception(JsonParseException.class, ControllerUtil::handleJsonParseException);
 		server.exception(InvalidFormatException.class, ControllerUtil::handleInvalidFormatException);
+		server.exception(NumberFormatException.class, ControllerUtil::handleNumberFormatException);
 	}
 
 	public void start() {

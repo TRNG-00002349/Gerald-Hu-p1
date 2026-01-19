@@ -39,6 +39,6 @@ public class ControllerUtil {
 	}
 
 	public static void handleNumberFormatException(NumberFormatException e, Context context) {
-		context.status(HttpStatus.BAD_REQUEST).result(String.format("Invalid number: %s", e.getMessage()));
+		context.status(HttpStatus.BAD_REQUEST).result(String.format("Invalid ID: %s", e.getMessage()));
 	}
 }

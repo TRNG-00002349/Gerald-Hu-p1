@@ -6,6 +6,7 @@ import com.revature.utils.Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import org.eclipse.jetty.http.HttpMethod;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -29,6 +30,7 @@ public class UserController implements Controller {
 		server.get("/users/{user-id}/posts", this::showOneUsersPosts);
 		server.put("/users/{user-id}", this::updateUser);
 		server.delete("/users/{user-id}", this::deleteUser);
+		server.before("/users/{user-id}*", this::validateUserId);
 	}
 
 	@Override
@@ -36,6 +38,19 @@ public class UserController implements Controller {
 		server.exception(UserNotFoundException.class, this::handleUserNotFoundException);
 		server.exception(UserValidationException.class, this::handleUserValidationException);
 		server.exception(UserIsDeletedException.class, this::handleUserIsDeletedException);
+	}
+
+	public void validateUserId(Context context) {
+		String userId = context.pathParam("user-id");
+		try {
+			Integer a = Integer.parseInt(userId);
+			if (a < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (NumberFormatException e) {
+			// Rethrow with modified message
+			throw new NumberFormatException(userId);
+		}
 	}
 
 	public void registerUser(Context context) throws SQLException {
