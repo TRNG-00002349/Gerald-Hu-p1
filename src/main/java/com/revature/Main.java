@@ -1,5 +1,8 @@
 package com.revature;
 
+import com.revature.auth.AuthController;
+import com.revature.auth.AuthDao;
+import com.revature.auth.AuthService;
 import com.revature.comments.CommentController;
 import com.revature.comments.CommentDao;
 import com.revature.comments.CommentService;
@@ -65,7 +68,11 @@ public class Main {
 					new CommentService()
 							.setPostDao(postDao)
 							.setCommentDao(commentDao)
-							.setUserDao(userDao)
+			);
+			AuthController authController = new AuthController(
+					new AuthService(
+							new AuthDao()
+					)
 			);
 
 			WebServer server = WebServer.builder()
@@ -74,6 +81,7 @@ public class Main {
 					.addController(userController)
 					.addController(postController)
 					.addController(commentController)
+					.addController(authController)
 					.build();
 			server.start();
 		} catch (IOException e) {

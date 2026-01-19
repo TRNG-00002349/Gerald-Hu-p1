@@ -23,12 +23,14 @@ public class UserController implements Controller {
 
 	@Override
 	public void registerRoutes(Javalin server) {
-		server.post("/users", this::registerUser);
+		server.post("/register", this::registerUser);
+
 		server.get("/users", this::showAllUsers);
 		server.get("/users/{user-id}", this::showOneUser);
 		server.get("/users/{user-id}/posts", this::showOneUsersPosts);
 		server.put("/users/{user-id}", this::updateUser);
 		server.delete("/users/{user-id}", this::deleteUser);
+
 		server.before("/users/{user-id}*", this::validateUserId);
 	}
 
