@@ -18,7 +18,7 @@ public class AuthDao {
 		String GET_USER_PW_SQL = """
 				SELECT id, hashed_password FROM users
 				WHERE
-				email = ? OR username = ?
+				(email = ? OR username = ?) AND deleted = FALSE;
 				""";
 		try (
 				var conn = DataSource.getConnection();

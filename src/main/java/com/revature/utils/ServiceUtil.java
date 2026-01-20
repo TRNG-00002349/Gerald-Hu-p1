@@ -2,7 +2,7 @@ package com.revature.utils;
 
 public class ServiceUtil {
 
-	public static void validateId(String id) {
+	public static void validateIdFormat(String id) {
 		try {
 			int a = Integer.parseInt(id);
 			if (a < 1) {

@@ -45,7 +45,7 @@ public class UserController implements Controller {
 
 	public void validateUserId(Context context) {
 		String userId = context.pathParam("user-id");
-		ServiceUtil.validateId(userId);
+		ServiceUtil.validateIdFormat(userId);
 	}
 
 	private void authorizeForUserEndpoints(Context context) {
@@ -56,7 +56,7 @@ public class UserController implements Controller {
 		Integer presentedUserId = ControllerUtil.getUserIdFromContext(context);
 		Integer accessedUserId = Integer.parseInt(context.pathParam("user-id"));
 		if (!presentedUserId.equals(accessedUserId)) {
-			throw new AuthFailureException("Not allowed to modify non-self users");
+			throw new AuthFailureException("Not allowed to modify someone else's user info");
 		}
 	}
 
