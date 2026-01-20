@@ -1,5 +1,7 @@
 package com.revature.posts;
 
+import io.javalin.http.Context;
+
 import java.sql.SQLException;
 
 public class PostService {
@@ -35,5 +37,9 @@ public class PostService {
 
 	public void deletePost(String postId) throws SQLException {
 		postDao.deletePost(postId);
+	}
+
+	public Integer getPostAuthorId(String postId) throws SQLException {
+		return postDao.getPostAuthorId(postId);
 	}
 }

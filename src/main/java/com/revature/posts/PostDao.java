@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PostDao {
 
-	private Integer getPostAuthorId(String postId) throws SQLException {
+	public Integer getPostAuthorId(String postId) throws SQLException {
 		String GET_AUTHOR_ID = """
 				SELECT author_id FROM posts
 				WHERE
