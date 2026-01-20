@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS likes (
 );
 
 
-TRUNCATE users, posts, comments;
+TRUNCATE users, posts, comments, likes;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE posts_id_seq RESTART WITH 1;
 ALTER SEQUENCE comments_id_seq RESTART WITH 1;
@@ -68,9 +68,9 @@ VALUES ('comment by deleted user on post by deleted user', 2, 2);
 INSERT INTO comments (content, author_id, post_id)
 VALUES ('same user can leave multiple comments', 1, 1);
 
-INSERT INTO likes (author_id, post_id)
+INSERT INTO likes (user_id, post_id)
 VALUES (1,1);
 
-INSERT INTO likes (author_id, post_id)
+INSERT INTO likes (user_id, post_id)
 VALUES (2,1);
 

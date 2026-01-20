@@ -19,6 +19,9 @@ public class Post {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Comment> commentList;
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<Integer> likesList;
+
 	public Post() {
 
 	}
@@ -71,5 +74,11 @@ public class Post {
 		this.commentList = commentList;
 	}
 
+	public List<Integer> getLikesList() {
+		return likesList;
+	}
 
+	public void setLikesList(List<Integer> likesList) {
+		this.likesList = likesList;
+	}
 }

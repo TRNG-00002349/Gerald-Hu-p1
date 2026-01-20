@@ -65,10 +65,15 @@ public class PostDao {
 				SELECT * FROM COMMENTS WHERE
 				POST_ID = ?
 				""";
+		String READ_POST_LIKES_SQL = """
+				SELECT user_id FROM likes WHERE
+				POST_ID = ?
+				""";
 		try (
 				var conn = DataSource.getConnection();
 				var pstmt = conn.prepareStatement(READ_POST_SQL);
-				var pstmt2 = conn.prepareStatement(READ_POST_COMMENTS_SQL);
+				var pstmtComments = conn.prepareStatement(READ_POST_COMMENTS_SQL);
+				var pstmtLikes = conn.prepareStatement(READ_POST_LIKES_SQL);
 				) {
 			pstmt.setInt(1, Integer.parseInt(postId));
 			pstmt.executeQuery();
@@ -84,22 +89,33 @@ public class PostDao {
 			p.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
 			p.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
 
-			pstmt2.setInt(1, Integer.parseInt(postId));
-			pstmt2.executeQuery();
-			ResultSet rs2 = pstmt2.getResultSet();
+			pstmtComments.setInt(1, Integer.parseInt(postId));
+			pstmtComments.executeQuery();
+			ResultSet rsComments = pstmtComments.getResultSet();
 			List<Comment> commentList = new LinkedList<>();
 			p.setCommentList(commentList);
-			if (!rs2.isBeforeFirst()) {
-				return p;
+			if (rsComments.isBeforeFirst()) {
+				while (rsComments.next()) {
+					Comment c = new Comment();
+					c.setId(rsComments.getInt("id"));
+					c.setAuthorId(rsComments.getInt("author_id"));
+					c.setContent(rsComments.getString("content"));
+					c.setCreatedAt(rsComments.getObject("created_at", LocalDateTime.class));
+					c.setUpdatedAt(rsComments.getObject("updated_at", LocalDateTime.class));
+					commentList.add(c);
+				}
 			}
-			while (rs2.next()) {
-				Comment c = new Comment();
-				c.setId(rs2.getInt("id"));
-				c.setAuthorId(rs2.getInt("author_id"));
-				c.setContent(rs2.getString("content"));
-				c.setCreatedAt(rs2.getObject("created_at", LocalDateTime.class));
-				c.setUpdatedAt(rs2.getObject("updated_at", LocalDateTime.class));
-				commentList.add(c);
+
+
+			pstmtLikes.setInt(1, Integer.parseInt(postId));
+			pstmtLikes.executeQuery();
+			ResultSet rsLikes = pstmtLikes.getResultSet();
+			List<Integer> likesList = new LinkedList<>();
+			p.setLikesList(likesList);
+			if (rsLikes.isBeforeFirst()) {
+				while (rsLikes.next()) {
+					likesList.add(rsLikes.getInt("user_id"));
+				}
 			}
 			return p;
 		}
