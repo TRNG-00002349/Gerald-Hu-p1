@@ -1,5 +1,6 @@
 package com.revature.users;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.revature.posts.Post;
@@ -18,8 +19,10 @@ public class User {
 	// Note: Could use private UserAuthDTO instead, using composition.
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone="GMT")
 	private LocalDateTime createdAt;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone="GMT")
 	private LocalDateTime updatedAt;
 
 	@JsonIgnore
