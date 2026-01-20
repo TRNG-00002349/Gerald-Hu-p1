@@ -59,4 +59,7 @@ public class CommentService {
 		commentDao.deleteCommentOnPost(commentId);
 	}
 
+	public Integer getCommentAuthorId(String commentId) throws SQLException {
+		return commentDao.getCommentAuthorId(commentId);
+	}
 }

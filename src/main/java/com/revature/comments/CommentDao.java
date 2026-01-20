@@ -61,6 +61,27 @@ public class CommentDao {
 		}
 	}
 
+
+	public Integer getCommentAuthorId(String commentId) throws SQLException {
+		String GET_COMMENT_AUTHOR_SQL = """
+				SELECT author_id FROM comments WHERE
+				id = ?
+				""";
+		try (
+				var conn = DataSource.getConnection();
+				var pstmt = conn.prepareStatement(GET_COMMENT_AUTHOR_SQL)
+		) {
+			pstmt.setInt(1, Integer.parseInt(commentId));
+			pstmt.executeQuery();
+			ResultSet rs = pstmt.getResultSet();
+			if (!rs.isBeforeFirst()) {
+				throw new CommentNotFoundException(commentId);
+			}
+			rs.next();
+			return rs.getInt("author_id");
+		}
+	}
+
 	public Comment updateCommentOnPost(String commentId, Comment comment) throws SQLException {
 		String UPDATE_COMMENT_ON_POST_SQL = """
 				UPDATE comments SET
