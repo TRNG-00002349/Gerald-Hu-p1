@@ -7,6 +7,9 @@ import com.revature.comments.CommentController;
 import com.revature.comments.CommentDao;
 import com.revature.comments.CommentService;
 import com.revature.health.HealthController;
+import com.revature.likes.LikeController;
+import com.revature.likes.LikeDao;
+import com.revature.likes.LikeService;
 import com.revature.posts.Post;
 import com.revature.posts.PostController;
 import com.revature.posts.PostDao;
@@ -72,6 +75,11 @@ public class Main {
 							new AuthDao()
 					)
 			);
+			LikeController likeController = new LikeController(
+					new LikeService(
+							new LikeDao()
+					)
+			);
 
 			WebServer server = WebServer.builder()
 					.port(10001)
@@ -80,6 +88,7 @@ public class Main {
 					.addController(postController)
 					.addController(commentController)
 					.addController(authController)
+					.addController(likeController)
 					.build();
 			server.start();
 		} catch (IOException e) {

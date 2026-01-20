@@ -6,10 +6,17 @@ import com.revature.utils.ControllerUtil;
 import com.revature.utils.ServiceUtil;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 
-public class LikesController implements Controller {
+import java.sql.SQLException;
 
-	// private static LikesService likesService;
+public class LikeController implements Controller {
+
+	private LikeService likeService;
+
+	public LikeController(LikeService likeService) {
+		this.likeService = likeService;
+	}
 
 	@Override
 	public void registerRoutes(Javalin server) {
@@ -36,15 +43,15 @@ public class LikesController implements Controller {
 			return;
 		}
 		Integer presentedUserId = ControllerUtil.getUserIdFromContext(context);
-		if (presentedUserId == null) {
-			throw new AuthFailureException("couldn't parse user token");
-		}
 		// When we DELETE, we're always deleting the user's own "Like",
 		// so there's no need to compare authorId; it will always be the same.
 	}
 
-	public void createLikeOnPost(Context context) {
-
+	public void createLikeOnPost(Context context) throws SQLException {
+		Integer userId = ControllerUtil.getUserIdFromContext(context);
+		Integer postId = Integer.parseInt(context.pathParam("post-id"));
+		likeService.createLikeOnPost(userId, postId);
+		context.status(HttpStatus.NO_CONTENT);
 	}
 
 	public void deleteLikeOnPost(Context context) {
