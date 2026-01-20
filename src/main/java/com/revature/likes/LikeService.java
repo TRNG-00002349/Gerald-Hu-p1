@@ -13,4 +13,8 @@ public class LikeService {
 	public void createLikeOnPost(Integer userId, Integer postId) throws SQLException {
 		likeDao.createLikeOnPost(userId, postId);
 	}
+
+	public void deleteLikeOnPost(Integer userId, Integer postId) throws SQLException {
+		likeDao.deleteLikeOnPost(userId, postId);
+	}
 }

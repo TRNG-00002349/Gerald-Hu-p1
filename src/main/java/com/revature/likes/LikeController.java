@@ -42,9 +42,10 @@ public class LikeController implements Controller {
 		if (!needsAuth) {
 			return;
 		}
-		Integer presentedUserId = ControllerUtil.getUserIdFromContext(context);
-		// When we DELETE, we're always deleting the user's own "Like",
-		// so there's no need to compare authorId; it will always be the same.
+		ControllerUtil.getUserIdFromContext(context);
+		// When we CREATE or DELETE, we're always using the user's own like, which
+		// should already be passed in via the token. There's no need to compare author_id
+		// because it will never be anything different.
 	}
 
 	public void createLikeOnPost(Context context) throws SQLException {
@@ -54,7 +55,10 @@ public class LikeController implements Controller {
 		context.status(HttpStatus.NO_CONTENT);
 	}
 
-	public void deleteLikeOnPost(Context context) {
-
+	public void deleteLikeOnPost(Context context) throws SQLException {
+		Integer userId = ControllerUtil.getUserIdFromContext(context);
+		Integer postId = Integer.parseInt(context.pathParam("post-id"));
+		likeService.deleteLikeOnPost(userId, postId);
+		context.status(HttpStatus.NO_CONTENT);
 	}
 }
