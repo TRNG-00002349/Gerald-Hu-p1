@@ -42,9 +42,6 @@ public class PostController implements Controller {
 			return;
 		}
 		Integer presentedUserId = ControllerUtil.getUserIdFromContext(context);
-		if (presentedUserId == null) {
-			throw new AuthFailureException("couldn't parse user token");
-		}
 		if (context.req().getMethod().equals("POST")) {
 			// a post that hasn't been made yet won't have an author to compare it to
 			return;

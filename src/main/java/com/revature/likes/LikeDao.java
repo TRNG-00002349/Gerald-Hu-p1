@@ -18,6 +18,5 @@ public class LikeDao {
 			pstmt.setInt(2, postId);
 			pstmt.executeUpdate();
 		}
-		
 	}
 }

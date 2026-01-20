@@ -24,6 +24,10 @@ public class ControllerUtil {
 					.parse(context.header("token"))
 					.getPayload();
 			presentedUserId = presentedClaims.get("userId", Integer.class);
+			if (presentedUserId == null) {
+				throw new AuthFailureException("");
+			}
+			ServiceUtil.validateIdFormat(presentedUserId.toString());
 		} catch (Exception e) {
 			throw new AuthFailureException("couldn't parse authentication token");
 		}
@@ -51,10 +55,12 @@ public class ControllerUtil {
 	public static void handleDBException(SQLException e, Context ctx) {
 		if (e.getSQLState().equals("23505")) {
 			ctx.status(HttpStatus.BAD_REQUEST).result("Duplicate username or email already exists");
+		} else if (e.getSQLState().equals("23503")) {
+			ctx.status(HttpStatus.BAD_REQUEST).result("Can't perform that action because entity is missing");
 		} else {
 			ctx.status(HttpStatus.INTERNAL_SERVER_ERROR).result(String.format("A database error occurred: %s", e.getMessage()));
-			e.printStackTrace();
 		}
+		e.printStackTrace();
 	}
 
 	public static void handleUnrecognizedPropertyException(UnrecognizedPropertyException e, Context context) {
