@@ -1,5 +1,7 @@
 package com.revature.auth;
 
+import com.revature.users.User;
+import com.revature.users.UserAuthDTO;
 import com.revature.users.UserNotFoundException;
 import com.revature.utils.DataSource;
 
@@ -12,9 +14,9 @@ public class AuthDao {
 
 	}
 
-	public String getUserHashedPassword(String email, String username) throws SQLException {
+	public User getUserIdAndHashedPassword(String email, String username) throws SQLException {
 		String GET_USER_PW_SQL = """
-				SELECT hashed_password FROM users
+				SELECT id, hashed_password FROM users
 				WHERE
 				email = ? OR username = ?
 				""";
@@ -35,7 +37,10 @@ public class AuthDao {
 				);
 			}
 			rs.next();
-			return rs.getString("hashed_password");
+			User u = new User();
+			u.setHashedPassword(rs.getString("hashed_password"));
+			u.setId(rs.getInt("id"));
+			return u;
 		}
 	}
 }

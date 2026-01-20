@@ -1,10 +1,17 @@
 package com.revature.auth;
 
+import com.revature.comments.Comment;
+import com.revature.posts.Post;
 import com.revature.users.UserAuthDTO;
 import com.revature.utils.Controller;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import org.eclipse.jetty.http.HttpMethod;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,19 +36,19 @@ public class AuthController implements Controller {
 
 	@Override
 	public void registerExceptions(Javalin server) {
+		server.exception(NotAuthenticatedException.class, this::handleNotAuthenticatedException);
 	}
 
 	private void loginUser(Context context) throws SQLException {
 		UserAuthDTO u = context.bodyAsClass(UserAuthDTO.class);
-		Boolean authenticated = authService.authenticateUser(u);
-		if (authenticated) {
+		try {
+			String token = authService.authenticateUser(u);
 			Map<String, String> creds = new HashMap<>();
-			creds.put("token", "sample token fix later");
-			// TODO: issue a proper token.
+			creds.put("token", token);
 			context.status(HttpStatus.OK)
 					.json(creds);
-		} else {
-			context.status(HttpStatus.UNAUTHORIZED).result("Couldn't log in; check credentials");
+		} catch (NotAuthenticatedException e) {
+			context.status(HttpStatus.UNAUTHORIZED).result(e.getMessage());
 		}
 	}
 
@@ -57,13 +64,55 @@ public class AuthController implements Controller {
 		}
 		if (NO_AUTH_ROUTES.contains(path)) {
 			return;
+		} else if (context.req().getMethod().equals("GET")) {
+			System.out.println("method == get; skipping auth");
+			return;
 		}
-		// We're allowed to make a trusting system, so we only check that a JWT was included and can be decrypted,
-		// nothing about its actual contents.
 
-		// TODO: check valid auth.
-		// User must present token; decrypted token must contain the userId or authorId supplied.
+		System.out.println("attempting authe");
+		Integer presentedUserId;
+		try {
+			JwtParser jwtParser = Jwts.parser()
+					.unsecured()
+					.build();
+			Claims presentedClaims = (Claims) jwtParser
+					.parse(context.header("token"))
+					.getPayload();
+			presentedUserId = presentedClaims.get("userId", Integer.class);
+		} catch (Exception e) {
+			throw new NotAuthenticatedException("couldn't parse authentication token");
+		}
 
+		Integer payloadUserId = -1;
+
+		// This is probably not very resilient logic.
+		if (context.path().contains("user")) {
+			payloadUserId = Integer.parseInt(context.pathParam("user-id"));
+		} else if (context.path().contains("post")) {
+			payloadUserId = context.bodyAsClass(Post.class).getAuthorId();
+		} else if (context.path().contains("comment")) {
+			payloadUserId = context.bodyAsClass(Comment.class).getAuthorId();
+		}
+
+		if (presentedUserId.equals(payloadUserId)) {
+			return;
+			/*
+			TODO: We definitely need to split this method up.
+			In particular, we need logic that the presented token == ID stored on the entity (user, post, comment);
+			those should be handled by individual controllers.
+			We don't actually need to include authorId or userId in the payload; the ID will come (implicitly) from the token.
+			We probably also want to reuse...
+				- the JWT-decoding code
+				- the methods, and paths, we actually apply this to
+			 */
+		} else {
+			throw new NotAuthenticatedException("Author ID doesn't match authentication token");
+		}
+
+	}
+
+	public void handleNotAuthenticatedException(Exception e, Context context) {
+		context.status(HttpStatus.UNAUTHORIZED).result(e.getMessage());
 	}
 
 }

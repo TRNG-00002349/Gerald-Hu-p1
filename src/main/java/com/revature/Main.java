@@ -34,8 +34,17 @@ public class Main {
 	     - User creation is exempt
 	 */
 
-	// TODO: Test suite. empty body, body of {}, malformed body, proper body
-	// valid user id, stringy user ID, invalid user ID. (Same for post IDs, comment IDs, etc.)
+	/*
+	Future work: Test suite.
+		- Most endpoints: empty body, body of {}, malformed body, proper body
+		- Most endpoints (testing Ids): proper user ID, not a number, negative number, not-specified
+		- Auth: username no email, email no username, neither, both; valid password, invalid password
+	 */
+
+	/*
+	Future work: better authE/authZ. Roles, including an admin role, for updating and deleting
+	content that isn't directly yours.
+	 */
 
 	// TODO: likes feature.
 
