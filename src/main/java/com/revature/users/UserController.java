@@ -1,7 +1,9 @@
 package com.revature.users;
 
+import com.revature.auth.AuthFailureException;
 import com.revature.posts.Post;
 import com.revature.utils.Controller;
+import com.revature.utils.ControllerUtil;
 import com.revature.utils.ServiceUtil;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -32,6 +34,7 @@ public class UserController implements Controller {
 		server.delete("/users/{user-id}", this::deleteUser);
 
 		server.before("/users/{user-id}*", this::validateUserId);
+		server.before("/users/{user-id}*", this::authorizeForUserEndpoints);
 	}
 
 	@Override
@@ -43,6 +46,18 @@ public class UserController implements Controller {
 	public void validateUserId(Context context) {
 		String userId = context.pathParam("user-id");
 		ServiceUtil.validateId(userId);
+	}
+
+	private void authorizeForUserEndpoints(Context context) {
+		Boolean needsAuth = ControllerUtil.checkIfNeedsAuth(context);
+		if (!needsAuth) {
+			return;
+		}
+		Integer presentedUserId = ControllerUtil.getUserIdFromContext(context);
+		Integer accessedUserId = Integer.parseInt(context.pathParam("user-id"));
+		if (!presentedUserId.equals(accessedUserId)) {
+			throw new AuthFailureException("Not allowed to modify non-self users");
+		}
 	}
 
 	public void registerUser(Context context) throws SQLException {
@@ -66,8 +81,6 @@ public class UserController implements Controller {
 		context.status(HttpStatus.OK);
 		context.json(user);
 	}
-
-	// get user by username
 
 	public void showOneUsersPosts(Context context) throws SQLException {
 		User user = userService.getUser(context.pathParam("user-id"));
@@ -96,9 +109,4 @@ public class UserController implements Controller {
 	private void handleUserValidationException(UserValidationException e, Context context) {
 		context.status(HttpStatus.BAD_REQUEST).result(String.format("User validation error: %s", e.getMessage()));
 	}
-
-	private void handleUserIsDeletedException(Exception e, Context context) {
-		context.status(HttpStatus.BAD_REQUEST).result(String.format("User #%s is deactivated and can't do this action", e.getMessage()));
-	}
-
 }

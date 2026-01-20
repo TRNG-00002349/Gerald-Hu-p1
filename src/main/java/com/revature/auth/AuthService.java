@@ -2,8 +2,6 @@ package com.revature.auth;
 
 import com.revature.users.User;
 import com.revature.users.UserAuthDTO;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -27,7 +25,7 @@ public class AuthService {
 					.claim("userId", storedId)
 					.compact();
 		} else {
-			throw new NotAuthenticatedException("Invalid login credentials");
+			throw new AuthFailureException("Invalid login credentials");
 		}
 	}
 
