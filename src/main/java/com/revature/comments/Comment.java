@@ -1,5 +1,6 @@
 package com.revature.comments;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -8,13 +9,18 @@ import java.time.LocalDateTime;
 public class Comment {
 	private Integer id;
 	private String content;
+
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Integer authorId;
+
 	@JsonIgnore
 	private Integer postId;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone="GMT")
 	private LocalDateTime createdAt;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone="GMT")
 	private LocalDateTime updatedAt;
 
 	public Comment() {
