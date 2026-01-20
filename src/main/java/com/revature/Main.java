@@ -24,17 +24,6 @@ import java.util.Properties;
 
 public class Main {
 	/*
-	 TODO: user authE/authZ.
-	  - Can't log in as a deleted user
-	  - Can't update a deleted user
-	  - Javalin before() handler: before Create, Update, and Delete actions:
-	     - check if user has a correct auth token
-	     - check if user is not deleted
-	     - check if user is attempting action on themselves
-	     - User creation is exempt
-	 */
-
-	/*
 	Future work: Test suite.
 		- Most endpoints: empty body, body of {}, malformed body, proper body
 		- Most endpoints (testing Ids): proper user ID, not a number, negative number, not-specified
