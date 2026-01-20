@@ -27,6 +27,14 @@ CREATE TABLE IF NOT EXISTS comments (
 		ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS likes (
+	id SERIAL PRIMARY KEY,
+	user_id INTEGER REFERENCES users (id),
+	post_id INTEGER
+		REFERENCES posts (id)
+		ON DELETE CASCADE
+);
+
 
 TRUNCATE users, posts, comments;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
@@ -59,3 +67,10 @@ VALUES ('comment by deleted user on post by deleted user', 2, 2);
 
 INSERT INTO comments (content, author_id, post_id)
 VALUES ('same user can leave multiple comments', 1, 1);
+
+INSERT INTO likes (author_id, post_id)
+VALUES (1,1);
+
+INSERT INTO likes (author_id, post_id)
+VALUES (2,1);
+

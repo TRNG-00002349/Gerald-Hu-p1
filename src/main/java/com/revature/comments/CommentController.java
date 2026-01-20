@@ -25,7 +25,6 @@ public class CommentController implements Controller {
 		// Going to /posts/{post-id} will also show that post's comments, without needing to append /comments to it.
 
 		server.post("/posts/{post-id}/comments", this::createCommentOnPost);
-		server.get("/posts/{post-id}/comments", PostController::getBlogPost);
 		server.get("/posts/{post-id}/comments/{comment-id}", this::getCommentOnPost);
 		server.put("/posts/{post-id}/comments/{comment-id}", this::updateCommentOnPost);
 		server.delete("/posts/{post-id}/comments/{comment-id}", this::deleteCommentOnPost);

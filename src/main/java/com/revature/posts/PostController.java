@@ -20,12 +20,12 @@ public class PostController implements Controller {
 	@Override
 	public void registerRoutes(Javalin server) {
 		server.post("/posts/", this::createNewBlogPost);
-		server.get("/posts/{post-id}", PostController::getBlogPost);
+		server.get("/posts/{post-id}*", this::getBlogPost);
+		// Will get comments and likes as well. TODO: modify this to get the likes as well.
 		server.put("/posts/{post-id}", this::updateBlogPost);
 		server.delete("/posts/{post-id}", this::deleteBlogPost);
 
-		server.before("/posts/{post-id}", this::validateBlogPostId);
-		server.before("/posts/{post-id}/", this::validateBlogPostId);
+		server.before("/posts/{post-id}*", this::validateBlogPostId);
 		server.before("/posts/{post-id}", this::authorizeForPostEndpoints);
 		server.before("/posts/{post-id}/", this::authorizeForPostEndpoints);
 	}
@@ -70,7 +70,7 @@ public class PostController implements Controller {
 		context.status(HttpStatus.CREATED).json(persistedPost);
 	}
 
-	public static void getBlogPost(Context context) throws SQLException {
+	public void getBlogPost(Context context) throws SQLException {
 		Post post = postService.readPost(context.pathParam("post-id"));
 		context.status(HttpStatus.OK).json(post);
 	}
